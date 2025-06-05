@@ -591,3 +591,24 @@
          .dropdown-item:hover {
             background-color: #444;
           }
+
+.tool-card-link {
+  text-decoration: none;
+  color: inherit;  /* keep the same text color */
+  display: block;  /* make anchor behave like a block element */
+  cursor: pointer;
+  border-radius: 8px; /* match card corners if needed */
+  transition: box-shadow 0.3s ease;
+}
+
+.tool-card-link:hover,
+.tool-card-link:focus {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+/* Optional: remove default blue focus outline and add your own for accessibility */
+.tool-card-link:focus-visible {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
