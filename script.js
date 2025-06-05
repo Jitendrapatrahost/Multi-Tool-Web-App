@@ -131,7 +131,7 @@ document.querySelectorAll('.scroll-reveal').forEach(el => {
 // Tool Card Hover and Click Effects
 // ================================
 
-document.querySelectorAll('.tool-card').forEach(card => {
+/* document.querySelectorAll('.tool-card').forEach(card => {
     card.addEventListener('mouseenter', () => {
         card.style.transform = 'translateY(-10px) scale(1.02)';
     });
@@ -145,7 +145,7 @@ document.querySelectorAll('.tool-card').forEach(card => {
         alert(`Opening ${toolName}...`);
         // Optionally: call redirectToTool(toolName.toLowerCase().replace(/\s/g, '-'));
     });
-});
+}); */
 
 // ================================
 // Parallax Effect for Hero Section
