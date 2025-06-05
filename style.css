@@ -579,3 +579,15 @@
             border-radius: 4px;
         }
  
+        .dropdown-item {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #333;
+            border-bottom: 1px solid #444;
+          }
+
+         .dropdown-item:hover {
+            background-color: #444;
+          }
