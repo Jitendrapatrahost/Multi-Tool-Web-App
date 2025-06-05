@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolBox - All-in-One Online Tools</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header with Navbar -->
+    <header>
+        <nav class="container">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="logo">ToolBox</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <!-- Navigation Section -->
+            <div class="sidebar-section">
+                <h3>Navigation</h3>
+                <a href="#home" class="sidebar-link">🏠 Home</a>
+                <a href="#features" class="sidebar-link">✨ Features</a>
+                <a href="#contact" class="sidebar-link">📞 Contact</a>
+            </div>
+
+            <!-- Tools Dropdown -->
+            <div class="sidebar-section">
+                <div class="tools-dropdown">
+                    <button class="dropdown-toggle" id="toolsDropdown">
+                        🛠️ All Tools <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu" id="toolsMenu">
+                        <button class="dropdown-item" onclick="redirectToTool('word-counter')">📝 Word Counter</button>
+                        <button class="dropdown-item" onclick="redirectToTool('currency-converter')">💱 Currency Converter</button>
+                        <button class="dropdown-item" onclick="redirectToTool('color-generator')">🎨 Color Palette Generator</button>
+                        <button class="dropdown-item" onclick="redirectToTool('password-generator')">🔐 Password Generator</button>
+                        <button class="dropdown-item" onclick="redirectToTool('unit-converter')">📏 Unit Converter</button>
+                        <button class="dropdown-item" onclick="redirectToTool('url-shortener')">🔗 URL Shortener</button>
+                        <button class="dropdown-item" onclick="redirectToTool('qr-generator')">📱 QR Code Generator</button>
+                        <button class="dropdown-item" onclick="redirectToTool('image-compressor')">🖼️ Image Compressor</button>
+                        <button class="dropdown-item" onclick="redirectToTool('base64-encoder')">🔒 Base64 Encoder/Decoder</button>
+                        <button class="dropdown-item" onclick="redirectToTool('text-formatter')">📄 Text Formatter</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="sidebar-section">
+                <h3>Quick Links</h3>
+                <a href="#" class="sidebar-link">📋 Favorites</a>
+                <a href="#" class="sidebar-link">📈 Recently Used</a>
+                <a href="#" class="sidebar-link">⚙️ Settings</a>
+                <a href="#" class="sidebar-link">❓ Help & Support</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="floating">ToolBox</h1>
+            <p>Your ultimate collection of essential web tools. Word counter, currency converter, and much more - all in one beautiful, fast platform.</p>
+            <a href="#tools" class="cta-button">Explore Tools</a>
+        </div>
+    </section>
+
+    <!-- Tools Grid Section -->
+    <section class="tools-section" id="tools">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">Powerful Tools at Your Fingertips</h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">📝</div>
+                    <h3>Word Counter</h3>
+                    <p>Count words, characters, paragraphs, and reading time instantly. Perfect for writers and content creators.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">💱</div>
+                    <h3>Currency Converter</h3>
+                    <p>Get real-time exchange rates and convert between 150+ global currencies with live market data.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🎨</div>
+                    <h3>Color Palette Generator</h3>
+                    <p>Create stunning color schemes and palettes for your design projects with AI-powered suggestions.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔐</div>
+                    <h3>Password Generator</h3>
+                    <p>Generate secure, customizable passwords with advanced security options and strength indicators.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📏</div>
+                    <h3>Unit Converter</h3>
+                    <p>Convert between metric and imperial units for length, weight, temperature, and volume measurements.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔗</div>
+                    <h3>URL Shortener</h3>
+                    <p>Create short, memorable links with custom aliases and detailed analytics tracking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">Why Choose ToolBox?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>All tools are optimized for speed with instant results and smooth performance across all devices.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Privacy First</h3>
+                    <p>Your data stays private. All processing happens locally in your browser with no data collection.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Responsive design that works perfectly on desktop, tablet, and mobile devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#home">Home</a>
+                    <a href="#tools">All Tools</a>
+                    <a href="#features">Features</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Tools</h3>
+                    <a href="#">Word Counter</a>
+                    <a href="#">Currency Converter</a>
+                    <a href="#">Color Generator</a>
+                    <a href="#">Password Generator</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <a href="#">Help Center</a>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ToolBox. All rights reserved. Made with ❤️ for productivity enthusiasts.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
