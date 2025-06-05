@@ -50,7 +50,7 @@ document.querySelectorAll('.sidebar-link').forEach(link => {
 // Redirect to Specific Tool Page
 // ================================
 
-function redirectToTool(toolName) {
+/* function redirectToTool(toolName) {
     const toolUrls = {
         'word-counter': '/tools/word-counter',
         'currency-converter': '/tools/currency-converter',
@@ -76,7 +76,7 @@ function redirectToTool(toolName) {
         // Uncomment below line to navigate in real app
         // window.location.href = toolUrl;
     }
-}
+} */
 
 // ================================
 // Smooth Scroll for Anchor Links
