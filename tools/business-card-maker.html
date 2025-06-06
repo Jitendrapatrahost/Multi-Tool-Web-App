@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Card Maker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #764ba2;
+            background: #f0f4ff;
+        }
+
+        .color-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .preview-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card-preview {
+            width: 350px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .card-preview:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+        }
+
+        #businessCard {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+
+        .download-section {
+            margin-top: 20px;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+            margin-bottom: 10px;
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 10px 25px rgba(86, 171, 47, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card-preview {
+                width: 300px;
+                height: 171px;
+            }
+
+            .color-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .image-preview {
+            max-width: 50px;
+            max-height: 50px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 2px solid #e0e6ed;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Business Card Maker ✨</h1>
+        
+        <div class="main-content">
+            <div class="form-section">
+                <h2 style="margin-bottom: 20px; color: #2c3e50;">Card Details</h2>
+                
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                    <div class="error-message" id="nameError">Name is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="position">Position/Title</label>
+                    <input type="text" id="position" placeholder="e.g. Software Engineer, CEO">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="your.email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
+                </div>
+
+                <div class="form-group">
+                    <label for="profileImage">Profile Image</label>
+                    <input type="file" id="profileImage" accept="image/*">
+                    <img id="profilePreview" class="image-preview" style="display: none;">
+                </div>
+
+                <div class="form-group">
+                    <label for="logoImage">Company Logo</label>
+                    <input type="file" id="logoImage" accept="image/*">
+                    <img id="logoPreview" class="image-preview" style="display: none;">
+                </div>
+
+                <div class="color-controls">
+                    <button onclick="randomizeBackground()">🎨 Random Background</button>
+                    <button onclick="updateCard()">🔄 Update Preview</button>
+                </div>
+
+                <div class="success-message" id="successMessage">Card updated successfully!</div>
+            </div>
+
+            <div class="preview-section">
+                <h2 style="margin-bottom: 20px; color: #2c3e50;">Live Preview</h2>
+                
+                <div class="card-preview">
+                    <svg id="businessCard" width="350" height="200"></svg>
+                </div>
+
+                <div class="download-section">
+                    <button class="download-btn" onclick="downloadCard('png')">📱 Download PNG</button>
+                    <button class="download-btn" onclick="downloadCard('svg')">🎨 Download SVG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentBgColor = '#667eea';
+        let profileImageData = null;
+        let logoImageData = null;
+        let snap;
+
+        // Initialize Snap.svg
+        document.addEventListener('DOMContentLoaded', function() {
+            snap = Snap("#businessCard");
+            generateRandomBackground();
+            updateCard();
+            
+            // Add event listeners for real-time updates
+            ['name', 'position', 'email', 'phone'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateCard);
+            });
+
+            // Handle image uploads
+            document.getElementById('profileImage').addEventListener('change', handleProfileImage);
+            document.getElementById('logoImage').addEventListener('change', handleLogoImage);
+        });
+
+        function generateRandomBackground() {
+            const colors = [
+                ['#FF6B6B', '#4ECDC4'],
+                ['#45B7D1', '#96CEB4'],
+                ['#FFEAA7', '#DDA0DD'],
+                ['#74B9FF', '#E17055'],
+                ['#6C5CE7', '#A29BFE'],
+                ['#FD79A8', '#FDCB6E'],
+                ['#E84393', '#6C5CE7'],
+                ['#00B894', '#00CEC9'],
+                ['#FF7675', '#FD79A8'],
+                ['#2D3436', '#636E72']
+            ];
+            
+            const randomColors = colors[Math.floor(Math.random() * colors.length)];
+            currentBgColor = `linear-gradient(135deg, ${randomColors[0]}, ${randomColors[1]})`;
+            updateCard();
+        }
+
+        function randomizeBackground() {
+            generateRandomBackground();
+            showSuccessMessage();
+        }
+
+        function handleProfileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImageData = e.target.result;
+                    document.getElementById('profilePreview').src = profileImageData;
+                    document.getElementById('profilePreview').style.display = 'block';
+                    updateCard();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleLogoImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoImageData = e.target.result;
+                    document.getElementById('logoPreview').src = logoImageData;
+                    document.getElementById('logoPreview').style.display = 'block';
+                    updateCard();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateCard() {
+            if (!snap) return;
+
+            snap.clear();
+
+            // Create gradient background
+            const gradient = snap.gradient(currentBgColor.includes('linear-gradient') 
+                ? currentBgColor.match(/#[A-Fa-f0-9]{6}/g) || ['#667eea', '#764ba2']
+                : [currentBgColor, currentBgColor]);
+            
+            // Background rectangle with rounded corners
+            const bg = snap.rect(0, 0, 350, 200).attr({
+                fill: gradient,
+                rx: 15,
+                ry: 15
+            });
+
+            // Add subtle pattern overlay
+            const pattern = snap.rect(0, 0, 350, 200).attr({
+                fill: 'rgba(255,255,255,0.1)',
+                rx: 15,
+                ry: 15
+            });
+
+            // Get form values
+            const name = document.getElementById('name').value || 'Your Name';
+            const position = document.getElementById('position').value || 'Your Position';
+            const email = document.getElementById('email').value || 'your.email@example.com';
+            const phone = document.getElementById('phone').value || '+1 (555) 123-4567';
+
+            // Add profile image if available
+            if (profileImageData) {
+                const profileImage = snap.image(profileImageData, 20, 20, 60, 60);
+                profileImage.attr({
+                    clipPath: snap.circle(50, 50, 30).attr({fill: 'white'})
+                });
+                
+                // Profile image border
+                snap.circle(50, 50, 32).attr({
+                    fill: 'none',
+                    stroke: 'white',
+                    strokeWidth: 3
+                });
+            } else {
+                // Default profile placeholder
+                snap.circle(50, 50, 30).attr({
+                    fill: 'rgba(255,255,255,0.2)',
+                    stroke: 'white',
+                    strokeWidth: 2
+                });
+                snap.text(50, 57, '👤').attr({
+                    fontSize: '24px',
+                    textAnchor: 'middle',
+                    fill: 'white'
+                });
+            }
+
+            // Add logo if available
+            if (logoImageData) {
+                snap.image(logoImageData, 280, 20, 50, 50);
+            } else {
+                // Default logo placeholder
+                snap.rect(280, 20, 50, 50).attr({
+                    fill: 'rgba(255,255,255,0.2)',
+                    stroke: 'white',
+                    strokeWidth: 2,
+                    rx: 8
+                });
+                snap.text(305, 50, '🏢').attr({
+                    fontSize: '20px',
+                    textAnchor: 'middle',
+                    fill: 'white'
+                });
+            }
+
+            // Name (larger, bold)
+            snap.text(100, 45, name).attr({
+                fontSize: '20px',
+                fontWeight: 'bold',
+                fill: 'white',
+                fontFamily: 'Arial, sans-serif'
+            });
+
+            // Position
+            snap.text(100, 65, position).attr({
+                fontSize: '14px',
+                fill: 'rgba(255,255,255,0.9)',
+                fontFamily: 'Arial, sans-serif'
+            });
+
+            // Contact info with icons
+            snap.text(25, 120, '📧').attr({
+                fontSize: '14px'
+            });
+            snap.text(45, 120, email).attr({
+                fontSize: '12px',
+                fill: 'white',
+                fontFamily: 'Arial, sans-serif'
+            });
+
+            snap.text(25, 145, '📱').attr({
+                fontSize: '14px'
+            });
+            snap.text(45, 145, phone).attr({
+                fontSize: '12px',
+                fill: 'white',
+                fontFamily: 'Arial, sans-serif'
+            });
+
+            // Decorative elements
+            snap.circle(320, 160, 40).attr({
+                fill: 'rgba(255,255,255,0.1)',
+                stroke: 'none'
+            });
+
+            snap.circle(30, 170, 20).attr({
+                fill: 'rgba(255,255,255,0.05)',
+                stroke: 'none'
+            });
+        }
+
+        function downloadCard(format) {
+            if (!snap) return;
+
+            if (format === 'svg') {
+                const svgData = snap.toString();
+                const blob = new Blob([svgData], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'business-card.svg';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else if (format === 'png') {
+                const svgData = snap.toString();
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                canvas.width = 1050; // 3x resolution for better quality
+                canvas.height = 600;
+                
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, 1050, 600);
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'business-card.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    });
+                };
+                
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const svgUrl = URL.createObjectURL(svgBlob);
+                img.src = svgUrl;
+            }
+            
+            showSuccessMessage();
+        }
+
+        function showSuccessMessage() {
+            const msg = document.getElementById('successMessage');
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 2000);
+        }
+
+        function validateForm() {
+            const name = document.getElementById('name').value;
+            const nameError = document.getElementById('nameError');
+            
+            if (!name.trim()) {
+                nameError.style.display = 'block';
+                return false;
+            }
+            nameError.style.display = 'none';
+            return true;
+        }
+    </script>
+</body>
+</html>
