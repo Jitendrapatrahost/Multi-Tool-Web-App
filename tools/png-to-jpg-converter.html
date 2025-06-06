@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JPG to PNG Converter</title>
+    <title>PNG to JPG Converter</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -21,252 +21,283 @@
             justify-content: center;
         }
 
-        .container {
+        .converter-container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            max-width: 500px;
             width: 100%;
-            max-width: 400px;
-            background: #f5f5f5;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            text-align: center;
         }
 
         .header {
-            background: #f5f5f5;
-            padding: 30px 20px 20px;
-            text-align: center;
+            margin-bottom: 24px;
         }
 
         .header-icon {
-            width: 40px;
-            height: 40px;
-            background: #667eea;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            font-size: 20px;
-            color: white;
+            width: 24px;
+            height: 24px;
+            background: #6366f1;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
         }
 
-        .header h1 {
+        .header-title {
             font-size: 24px;
-            color: #667eea;
-            margin-bottom: 8px;
             font-weight: 600;
+            color: #1f2937;
+            display: inline-block;
+            vertical-align: middle;
         }
 
-        .header p {
+        .header-subtitle {
+            color: #6b7280;
             font-size: 14px;
-            color: #666;
+            margin-top: 8px;
             line-height: 1.4;
         }
 
-        .main-content {
-            padding: 0 20px 30px;
-        }
-
         .upload-area {
-            border: 2px dashed #667eea;
-            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
             padding: 40px 20px;
-            text-align: center;
-            background: white;
-            margin-bottom: 20px;
+            margin: 24px 0;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: #f9fafb;
         }
 
         .upload-area:hover {
-            border-color: #5a6fd8;
-            background: #fafbff;
+            border-color: #6366f1;
+            background: #f0f9ff;
         }
 
         .upload-area.dragover {
-            border-color: #5a6fd8;
-            background: #f0f4ff;
+            border-color: #6366f1;
+            background: #eff6ff;
+            transform: scale(1.02);
         }
 
         .upload-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
         }
 
         .upload-text {
             font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 4px;
         }
 
         .upload-subtext {
-            font-size: 12px;
-            color: #888;
+            font-size: 14px;
+            color: #6b7280;
         }
 
         .file-input {
             display: none;
         }
 
-        .file-info {
-            background: white;
-            border-radius: 12px;
+        .file-info-section {
+            background: #f9fafb;
+            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin: 20px 0;
+            text-align: left;
             display: none;
         }
 
-        .file-info h3 {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 15px;
+        .info-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .info-icon {
+            margin-right: 8px;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            font-size: 14px;
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
         .info-item {
             display: flex;
             justify-content: space-between;
-            color: #666;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: #6b7280;
         }
 
         .info-value {
-            color: #333;
+            color: #374151;
             font-weight: 500;
         }
 
-        .preview-section {
-            display: none;
+        .file-preview {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid #e5e7eb;
         }
 
-        .preview-container {
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .file-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .file-thumbnail {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .converted-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .preview-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 20px;
+            margin: 20px 0;
         }
 
-        .preview-box {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
+        .preview-item {
             text-align: center;
         }
 
-        .preview-box h4 {
+        .preview-label {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .preview-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-
-        .preview-placeholder {
-            width: 80px;
-            height: 80px;
-            background: #f0f0f0;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            font-size: 24px;
-            color: #ccc;
-        }
-
-        .preview-size {
-            font-size: 12px;
-            color: #888;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
         }
 
         .success-message {
-            background: #d4edda;
-            color: #155724;
+            background: #d1fae5;
+            color: #065f46;
             padding: 12px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 16px 0;
             font-size: 14px;
-            text-align: center;
+            font-weight: 500;
             display: none;
         }
 
-        .success-message::before {
-            content: '✓ ';
-            font-weight: bold;
+        .success-icon {
+            margin-right: 8px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 24px;
         }
 
         .btn {
-            width: 100%;
-            padding: 12px;
+            padding: 12px 24px;
             border: none;
             border-radius: 8px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
         }
 
         .btn-primary {
-            background: #28a745;
+            background: #10b981;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #218838;
+            background: #059669;
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background: #28a745;
+            background: #6366f1;
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #218838;
+            background: #4f46e5;
+            transform: translateY(-1px);
         }
 
         .btn-danger {
-            background: #dc3545;
+            background: #ef4444;
             color: white;
         }
 
         .btn-danger:hover {
-            background: #c82333;
+            background: #dc2626;
+            transform: translateY(-1px);
         }
 
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none !important;
         }
 
         .loading {
+            display: none;
             text-align: center;
             padding: 20px;
-            display: none;
         }
 
         .spinner {
-            width: 30px;
-            height: 30px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e5e7eb;
+            border-top: 3px solid #6366f1;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            margin: 0 auto 12px;
         }
 
         @keyframes spin {
@@ -274,309 +305,435 @@
             100% { transform: rotate(360deg); }
         }
 
-        @media (max-width: 480px) {
-            .container {
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 14px;
+            display: none;
+        }
+
+        .quality-section {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .quality-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .quality-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        .quality-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+        }
+
+        .quality-value {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .converter-container {
                 margin: 10px;
-                max-width: none;
+                padding: 24px;
             }
-            
-            .preview-container {
+
+            .preview-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="converter-container">
+        <!-- Header -->
         <div class="header">
-            <div class="header-icon">📁</div>
-            <h1>JPG to PNG Converter</h1>
-            <p>Convert your JPG images to PNG format with transparency support</p>
+            <div>
+                <span class="header-icon">📸</span>
+                <span class="header-title">PNG to JPG Converter</span>
+            </div>
+            <div class="header-subtitle">
+                Convert your PNG images to JPG format with transparency support
+            </div>
         </div>
+
+        <!-- Upload Area -->
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" class="file-input" accept=".png" multiple>
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Drop your PNG image here</div>
+            <div class="upload-subtext">or click to browse files</div>
+        </div>
+
+        <!-- Quality Section -->
+        <div class="quality-section" id="qualitySection">
+            <div class="quality-label">JPG Quality Setting</div>
+            <input type="range" id="qualitySlider" class="quality-slider" min="10" max="100" value="85">
+            <div class="quality-value">Quality: <span id="qualityValue">85</span>%</div>
+        </div>
+
+        <!-- File Information -->
+        <div class="file-info-section" id="fileInfoSection">
+            <div class="info-header">
+                <span class="info-icon">📊</span>
+                File Information
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Total Files:</span>
+                    <span class="info-value" id="totalFiles">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total Size:</span>
+                    <span class="info-value" id="totalSize">0 KB</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Average Size:</span>
+                    <span class="info-value" id="averageSize">0 KB</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Format:</span>
+                    <span class="info-value">PNG → JPG</span>
+                </div>
+            </div>
+            <div class="file-preview" id="filePreview"></div>
+        </div>
+
+        <!-- Converted Section -->
+        <div class="converted-section" id="convertedSection">
+            <div class="preview-grid" id="previewGrid"></div>
+            <div class="success-message" id="successMessage">
+                <span class="success-icon">✅</span>
+                All images converted successfully!
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="error-message" id="errorMessage"></div>
         
-        <div class="main-content">
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📂</div>
-                <div class="upload-text">Drop your JPG image here</div>
-                <div class="upload-subtext">or click to browse files</div>
-                <input type="file" id="fileInput" class="file-input" accept=".jpg,.jpeg,image/jpeg">
-            </div>
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Converting images...</div>
+        </div>
 
-            <div class="file-info" id="fileInfo">
-                <h3>📊 File Information</h3>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span>Total Files:</span>
-                        <span class="info-value" id="totalFiles">1</span>
-                    </div>
-                    <div class="info-item">
-                        <span>Total Size:</span>
-                        <span class="info-value" id="totalSize">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span>Average Size:</span>
-                        <span class="info-value" id="avgSize">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span>Format:</span>
-                        <span class="info-value">JPG → PNG</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="preview-section" id="previewSection">
-                <div class="preview-container">
-                    <div class="preview-box">
-                        <h4>📷 Original</h4>
-                        <div class="preview-placeholder" id="originalPlaceholder">📷</div>
-                        <img id="originalImage" class="preview-image" style="display: none;">
-                        <div class="preview-size" id="originalSize">-</div>
-                    </div>
-                    <div class="preview-box">
-                        <h4>🔄 Converted PNG</h4>
-                        <div class="preview-placeholder" id="convertedPlaceholder">🖼️</div>
-                        <img id="convertedImage" class="preview-image" style="display: none;">
-                        <div class="preview-size" id="convertedSize">-</div>
-                    </div>
-                </div>
-
-                <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <div>Converting image...</div>
-                </div>
-
-                <div class="success-message" id="successMessage">
-                    All images converted successfully!
-                </div>
-
-                <button class="btn btn-primary" id="convertBtn" onclick="convertImage()">
-                    🔄 Convert to PNG
-                </button>
-                <button class="btn btn-secondary" id="downloadBtn" onclick="downloadImage()" style="display: none;">
-                    📥 Download PNG
-                </button>
-                <button class="btn btn-danger" onclick="clearAll()">
-                    🗑️ Clear All
-                </button>
-            </div>
+        <!-- Buttons -->
+        <div class="buttons">
+            <button class="btn btn-primary" id="convertBtn" style="display: none;">
+                <span>🔄</span> Convert to JPG
+            </button>
+            <button class="btn btn-secondary" id="downloadBtn" style="display: none;">
+                <span>📥</span> Download JPG
+            </button>
+            <button class="btn btn-danger" id="clearBtn" style="display: none;">
+                <span>🗑️</span> Clear All
+            </button>
         </div>
     </div>
 
     <script>
-        let selectedFile = null;
-        let convertedDataUrl = null;
-
-        // DOM elements
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const fileInfo = document.getElementById('fileInfo');
-        const previewSection = document.getElementById('previewSection');
-        const originalImage = document.getElementById('originalImage');
-        const convertedImage = document.getElementById('convertedImage');
-        const originalPlaceholder = document.getElementById('originalPlaceholder');
-        const convertedPlaceholder = document.getElementById('convertedPlaceholder');
-        const loading = document.getElementById('loading');
-        const successMessage = document.getElementById('successMessage');
-        const convertBtn = document.getElementById('convertBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-
-        // File info elements
-        const totalSize = document.getElementById('totalSize');
-        const avgSize = document.getElementById('avgSize');
-        const originalSize = document.getElementById('originalSize');
-        const convertedSize = document.getElementById('convertedSize');
-
-        // Initialize event listeners
-        function initializeEventListeners() {
-            fileInput.addEventListener('change', handleFileSelect);
-            uploadArea.addEventListener('click', () => fileInput.click());
-            uploadArea.addEventListener('dragover', handleDragOver);
-            uploadArea.addEventListener('dragleave', handleDragLeave);
-            uploadArea.addEventListener('drop', handleDrop);
-
-            // Prevent default drag behaviors
-            document.addEventListener('dragover', e => e.preventDefault());
-            document.addEventListener('drop', e => e.preventDefault());
-        }
-
-        // Handle file selection
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) {
-                processFile(file);
-            }
-        }
-
-        // Handle drag over
-        function handleDragOver(event) {
-            event.preventDefault();
-            uploadArea.classList.add('dragover');
-        }
-
-        // Handle drag leave
-        function handleDragLeave(event) {
-            event.preventDefault();
-            uploadArea.classList.remove('dragover');
-        }
-
-        // Handle file drop
-        function handleDrop(event) {
-            event.preventDefault();
-            uploadArea.classList.remove('dragover');
-            
-            const files = event.dataTransfer.files;
-            if (files.length > 0) {
-                processFile(files[0]);
-            }
-        }
-
-        // Process selected file
-        function processFile(file) {
-            // Validate file type
-            if (!file.type.includes('jpeg') && !file.type.includes('jpg')) {
-                alert('Please select a JPG/JPEG file only.');
-                return;
+        class PNGToJPGConverter {
+            constructor() {
+                this.files = [];
+                this.convertedFiles = [];
+                this.quality = 0.85;
+                this.initializeElements();
+                this.bindEvents();
             }
 
-            // Validate file size (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert('File size must be less than 10MB.');
-                return;
+            initializeElements() {
+                this.uploadArea = document.getElementById('uploadArea');
+                this.fileInput = document.getElementById('fileInput');
+                this.fileInfoSection = document.getElementById('fileInfoSection');
+                this.filePreview = document.getElementById('filePreview');
+                this.qualitySection = document.getElementById('qualitySection');
+                this.qualitySlider = document.getElementById('qualitySlider');
+                this.qualityValue = document.getElementById('qualityValue');
+                this.convertedSection = document.getElementById('convertedSection');
+                this.previewGrid = document.getElementById('previewGrid');
+                this.convertBtn = document.getElementById('convertBtn');
+                this.downloadBtn = document.getElementById('downloadBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.loading = document.getElementById('loading');
+                this.successMessage = document.getElementById('successMessage');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.totalFiles = document.getElementById('totalFiles');
+                this.totalSize = document.getElementById('totalSize');
+                this.averageSize = document.getElementById('averageSize');
             }
 
-            selectedFile = file;
-            displayFileInfo(file);
-            loadImagePreview(file);
-            showPreviewSection();
-        }
-
-        // Display file information
-        function displayFileInfo(file) {
-            const size = formatFileSize(file.size);
-            totalSize.textContent = size;
-            avgSize.textContent = size;
-            fileInfo.style.display = 'block';
-        }
-
-        // Load image preview
-        function loadImagePreview(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                originalImage.src = e.target.result;
-                originalImage.style.display = 'block';
-                originalPlaceholder.style.display = 'none';
+            bindEvents() {
+                this.uploadArea.addEventListener('click', () => this.fileInput.click());
+                this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
                 
-                originalImage.onload = function() {
-                    const filename = file.name.length > 15 ? file.name.substring(0, 15) + '...' : file.name;
-                    originalSize.textContent = formatFileSize(file.size);
-                };
-            };
-            reader.readAsDataURL(file);
+                this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
+                this.uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+                
+                this.qualitySlider.addEventListener('input', (e) => this.updateQuality(e));
+                this.convertBtn.addEventListener('click', () => this.convertImages());
+                this.downloadBtn.addEventListener('click', () => this.downloadImages());
+                this.clearBtn.addEventListener('click', () => this.clearAll());
+            }
+
+            handleFileSelect(e) {
+                const files = Array.from(e.target.files);
+                this.processFiles(files);
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                this.uploadArea.classList.add('dragover');
+            }
+
+            handleDragLeave(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files);
+                this.processFiles(files);
+            }
+
+            processFiles(files) {
+                const pngFiles = files.filter(file => file.type === 'image/png');
+                
+                if (pngFiles.length === 0) {
+                    this.showError('Please select PNG files only.');
+                    return;
+                }
+
+                this.files = pngFiles;
+                this.showFileInfo();
+                this.hideError();
+            }
+
+            showFileInfo() {
+                // Show file information section
+                this.fileInfoSection.style.display = 'block';
+                this.qualitySection.style.display = 'block';
+                this.convertBtn.style.display = 'inline-flex';
+                this.clearBtn.style.display = 'inline-flex';
+
+                // Update file statistics
+                this.totalFiles.textContent = this.files.length;
+                const totalSize = this.files.reduce((sum, file) => sum + file.size, 0);
+                this.totalSize.textContent = (totalSize / 1024).toFixed(2) + ' KB';
+                this.averageSize.textContent = (totalSize / 1024 / this.files.length).toFixed(2) + ' KB';
+
+                // Show file previews
+                this.displayFilePreviews();
+            }
+
+            async displayFilePreviews() {
+                this.filePreview.innerHTML = '';
+                
+                for (const file of this.files) {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    // Create image preview
+                    const img = document.createElement('img');
+                    img.className = 'file-thumbnail';
+                    img.src = URL.createObjectURL(file);
+                    
+                    const fileName = document.createElement('div');
+                    fileName.className = 'file-name';
+                    fileName.textContent = file.name;
+                    
+                    const fileSize = document.createElement('div');
+                    fileSize.className = 'file-size';
+                    fileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+                    
+                    fileItem.appendChild(img);
+                    fileItem.appendChild(fileName);
+                    fileItem.appendChild(fileSize);
+                    
+                    this.filePreview.appendChild(fileItem);
+                }
+            }
+
+            updateQuality(e) {
+                this.quality = parseInt(e.target.value) / 100;
+                this.qualityValue.textContent = e.target.value;
+            }
+
+            async convertImages() {
+                this.showLoading();
+                this.convertedFiles = [];
+                
+                try {
+                    for (const file of this.files) {
+                        const convertedBlob = await this.convertPNGToJPG(file);
+                        this.convertedFiles.push({
+                            blob: convertedBlob,
+                            name: file.name.replace('.png', '.jpg'),
+                            originalFile: file
+                        });
+                    }
+                    
+                    this.hideLoading();
+                    this.showConvertedResults();
+                    
+                } catch (error) {
+                    this.hideLoading();
+                    this.showError('Error converting images: ' + error.message);
+                }
+            }
+
+            convertPNGToJPG(file) {
+                return new Promise((resolve, reject) => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = () => {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        
+                        // Fill white background
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                        
+                        canvas.toBlob((blob) => {
+                            if (blob) {
+                                resolve(blob);
+                            } else {
+                                reject(new Error('Failed to convert image'));
+                            }
+                        }, 'image/jpeg', this.quality);
+                    };
+                    
+                    img.onerror = () => reject(new Error('Failed to load image'));
+                    img.src = URL.createObjectURL(file);
+                });
+            }
+
+            showConvertedResults() {
+                this.convertedSection.style.display = 'block';
+                this.successMessage.style.display = 'block';
+                this.downloadBtn.style.display = 'inline-flex';
+                
+                this.previewGrid.innerHTML = '';
+                
+                // Create side-by-side preview
+                const originalDiv = document.createElement('div');
+                originalDiv.className = 'preview-item';
+                originalDiv.innerHTML = `
+                    <div class="preview-label">📷 Original</div>
+                    <div class="file-name">(${this.files[0].name})</div>
+                    <img src="${URL.createObjectURL(this.files[0])}" class="file-thumbnail">
+                    <div class="file-size">${(this.files[0].size / 1024).toFixed(2)} KB</div>
+                `;
+                
+                const convertedDiv = document.createElement('div');
+                convertedDiv.className = 'preview-item';
+                convertedDiv.innerHTML = `
+                    <div class="preview-label">🎯 Converted JPG</div>
+                    <div class="file-name">${this.convertedFiles[0].name}</div>
+                    <img src="${URL.createObjectURL(this.convertedFiles[0].blob)}" class="file-thumbnail">
+                    <div class="file-size">${(this.convertedFiles[0].blob.size / 1024).toFixed(2)} KB</div>
+                `;
+                
+                this.previewGrid.appendChild(originalDiv);
+                this.previewGrid.appendChild(convertedDiv);
+            }
+
+            async downloadImages() {
+                for (const file of this.convertedFiles) {
+                    const url = URL.createObjectURL(file.blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = file.name;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    // Small delay between downloads
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+            }
+
+            clearAll() {
+                this.files = [];
+                this.convertedFiles = [];
+                this.fileInput.value = '';
+                
+                // Hide all sections
+                this.fileInfoSection.style.display = 'none';
+                this.qualitySection.style.display = 'none';
+                this.convertedSection.style.display = 'none';
+                
+                // Hide buttons
+                this.convertBtn.style.display = 'none';
+                this.downloadBtn.style.display = 'none';
+                this.clearBtn.style.display = 'none';
+                
+                this.hideError();
+                this.hideLoading();
+            }
+
+            showLoading() {
+                this.loading.style.display = 'block';
+                this.convertBtn.disabled = true;
+            }
+
+            hideLoading() {
+                this.loading.style.display = 'none';
+                this.convertBtn.disabled = false;
+            }
+
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+            }
+
+            hideError() {
+                this.errorMessage.style.display = 'none';
+            }
         }
 
-        // Show preview section
-        function showPreviewSection() {
-            previewSection.style.display = 'block';
-            convertedImage.style.display = 'none';
-            convertedPlaceholder.style.display = 'flex';
-            successMessage.style.display = 'none';
-            downloadBtn.style.display = 'none';
-            convertBtn.disabled = false;
-        }
-
-        // Convert image to PNG
-        function convertImage() {
-            if (!selectedFile) return;
-
-            // Show loading
-            loading.style.display = 'block';
-            convertBtn.disabled = true;
-
-            // Create canvas for conversion
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Create image object
-            const img = new Image();
-            img.onload = function() {
-                // Set canvas dimensions
-                canvas.width = img.width;
-                canvas.height = img.height;
-
-                // Draw image on canvas (PNG preserves transparency)
-                ctx.drawImage(img, 0, 0);
-
-                // Convert to PNG
-                convertedDataUrl = canvas.toDataURL('image/png');
-
-                // Show converted image
-                convertedImage.src = convertedDataUrl;
-                convertedImage.style.display = 'block';
-                convertedPlaceholder.style.display = 'none';
-
-                // Calculate converted file size (approximate)
-                const base64Length = convertedDataUrl.length - 'data:image/png;base64,'.length;
-                const sizeInBytes = Math.round((base64Length * 3) / 4);
-                convertedSize.textContent = formatFileSize(sizeInBytes);
-
-                // Hide loading and show success
-                loading.style.display = 'none';
-                successMessage.style.display = 'block';
-                downloadBtn.style.display = 'block';
-                convertBtn.disabled = false;
-            };
-
-            img.src = originalImage.src;
-        }
-
-        // Download converted image
-        function downloadImage() {
-            if (!convertedDataUrl) return;
-
-            const link = document.createElement('a');
-            const filename = selectedFile.name.replace(/\.(jpg|jpeg)$/i, '') + '_converted.png';
-            link.download = filename;
-            link.href = convertedDataUrl;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Clear all
-        function clearAll() {
-            selectedFile = null;
-            convertedDataUrl = null;
-            fileInput.value = '';
-            fileInfo.style.display = 'none';
-            previewSection.style.display = 'none';
-            loading.style.display = 'none';
-            successMessage.style.display = 'none';
-            
-            // Reset images
-            originalImage.style.display = 'none';
-            convertedImage.style.display = 'none';
-            originalPlaceholder.style.display = 'flex';
-            convertedPlaceholder.style.display = 'flex';
-            
-            // Reset file info
-            totalSize.textContent = '-';
-            avgSize.textContent = '-';
-            originalSize.textContent = '-';
-            convertedSize.textContent = '-';
-        }
-
-        // Format file size
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeEventListeners();
+        // Initialize the converter
+        document.addEventListener('DOMContentLoaded', () => {
+            new PNGToJPGConverter();
         });
     </script>
 </body>
