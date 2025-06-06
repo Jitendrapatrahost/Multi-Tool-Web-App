@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Stopwatch</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .stopwatch-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stopwatch-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .title {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .display {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #00ff88;
+            font-size: 4em;
+            font-weight: bold;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .display.running {
+            animation: pulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 255, 136, 0.3); }
+            to { box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 255, 136, 0.6); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        }
+
+        .start-btn:hover {
+            background: linear-gradient(135deg, #ff5252, #d32f2f);
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #ffa726, #ff9800);
+        }
+
+        .stop-btn:hover {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #42a5f5, #2196f3);
+        }
+
+        .reset-btn:hover {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+        }
+
+        .lap-btn {
+            background: linear-gradient(135deg, #ab47bc, #9c27b0);
+        }
+
+        .lap-btn:hover {
+            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+        }
+
+        .laps-container {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .laps-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .laps-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .laps-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .lap-title {
+            color: white;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .lap-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .lap-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .lap-item:nth-child(odd) {
+            border-left-color: #ff6b6b;
+        }
+
+        .lap-item:nth-child(even) {
+            border-left-color: #4ecdc4;
+        }
+
+        .lap-number {
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .lap-time {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .fastest {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(56, 142, 60, 0.3)) !important;
+            border-left-color: #4caf50 !important;
+        }
+
+        .slowest {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.3), rgba(198, 40, 40, 0.3)) !important;
+            border-left-color: #f44336 !important;
+        }
+
+        .no-laps {
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .stopwatch-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .display {
+                font-size: 2.5em;
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 1em;
+                min-width: 100px;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .display {
+                font-size: 2em;
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9em;
+                min-width: 80px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stopwatch-container">
+        <h1 class="title"><i class="fas fa-stopwatch"></i> Stopwatch</h1>
+        
+        <div class="display" id="display">00:00:00</div>
+        
+        <div class="controls">
+            <button class="btn start-btn" id="startBtn">
+                <i class="fas fa-play"></i> Start
+            </button>
+            <button class="btn stop-btn" id="stopBtn" disabled>
+                <i class="fas fa-pause"></i> Stop
+            </button>
+            <button class="btn lap-btn" id="lapBtn" disabled>
+                <i class="fas fa-flag"></i> Lap
+            </button>
+            <button class="btn reset-btn" id="resetBtn">
+                <i class="fas fa-redo"></i> Reset
+            </button>
+        </div>
+
+        <div class="laps-container" id="lapsContainer">
+            <h3 class="lap-title"><i class="fas fa-list"></i> Lap Times</h3>
+            <div id="lapsList">
+                <div class="no-laps">No lap times recorded</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Stopwatch {
+            constructor() {
+                this.time = 0;
+                this.interval = null;
+                this.running = false;
+                this.laps = [];
+                
+                this.display = document.getElementById('display');
+                this.startBtn = document.getElementById('startBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.lapBtn = document.getElementById('lapBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.lapsList = document.getElementById('lapsList');
+                
+                this.initEventListeners();
+            }
+
+            initEventListeners() {
+                this.startBtn.addEventListener('click', () => this.start());
+                this.stopBtn.addEventListener('click', () => this.stop());
+                this.lapBtn.addEventListener('click', () => this.lap());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        if (this.running) {
+                            this.stop();
+                        } else {
+                            this.start();
+                        }
+                    } else if (e.code === 'KeyR') {
+                        this.reset();
+                    } else if (e.code === 'KeyL' && this.running) {
+                        this.lap();
+                    }
+                });
+            }
+
+            start() {
+                if (!this.running) {
+                    this.running = true;
+                    this.interval = setInterval(() => {
+                        this.time += 10;
+                        this.updateDisplay();
+                    }, 10);
+                    
+                    this.startBtn.disabled = true;
+                    this.stopBtn.disabled = false;
+                    this.lapBtn.disabled = false;
+                    
+                    this.startBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+                    this.display.classList.add('running');
+                }
+            }
+
+            stop() {
+                if (this.running) {
+                    this.running = false;
+                    clearInterval(this.interval);
+                    
+                    this.startBtn.disabled = false;
+                    this.stopBtn.disabled = true;
+                    this.lapBtn.disabled = true;
+                    
+                    this.startBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
+                    this.display.classList.remove('running');
+                }
+            }
+
+            reset() {
+                this.running = false;
+                clearInterval(this.interval);
+                this.time = 0;
+                this.laps = [];
+                
+                this.updateDisplay();
+                this.updateLapsList();
+                
+                this.startBtn.disabled = false;
+                this.stopBtn.disabled = true;
+                this.lapBtn.disabled = true;
+                this.startBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+                this.display.classList.remove('running');
+            }
+
+            lap() {
+                if (this.running) {
+                    const lapTime = this.time;
+                    const lapNumber = this.laps.length + 1;
+                    this.laps.push({
+                        number: lapNumber,
+                        time: lapTime,
+                        formattedTime: this.formatTime(lapTime)
+                    });
+                    this.updateLapsList();
+                }
+            }
+
+            updateDisplay() {
+                this.display.textContent = this.formatTime(this.time);
+            }
+
+            formatTime(time) {
+                const hours = Math.floor(time / 3600000);
+                const minutes = Math.floor((time % 3600000) / 60000);
+                const seconds = Math.floor((time % 60000) / 1000);
+                const milliseconds = Math.floor((time % 1000) / 10);
+                
+                if (hours > 0) {
+                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+                } else {
+                    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+                }
+            }
+
+            updateLapsList() {
+                if (this.laps.length === 0) {
+                    this.lapsList.innerHTML = '<div class="no-laps">No lap times recorded</div>';
+                    return;
+                }
+
+                // Find fastest and slowest laps
+                let fastest = this.laps[0];
+                let slowest = this.laps[0];
+                
+                this.laps.forEach(lap => {
+                    if (lap.time < fastest.time) fastest = lap;
+                    if (lap.time > slowest.time) slowest = lap;
+                });
+
+                // Create lap items HTML
+                const lapItems = this.laps.map(lap => {
+                    let className = 'lap-item';
+                    if (this.laps.length > 1) {
+                        if (lap.number === fastest.number) className += ' fastest';
+                        if (lap.number === slowest.number) className += ' slowest';
+                    }
+                    
+                    return `
+                        <div class="${className}">
+                            <span class="lap-number">Lap ${lap.number}</span>
+                            <span class="lap-time">${lap.formattedTime}</span>
+                        </div>
+                    `;
+                }).reverse().join('');
+
+                this.lapsList.innerHTML = lapItems;
+            }
+        }
+
+        // Initialize the stopwatch when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new Stopwatch();
+        });
+
+        // Add some visual feedback for button clicks
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.style.transform = 'translateY(-1px) scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
