@@ -169,7 +169,7 @@ window.addEventListener('load', () => {
 // Auto Size Dropdown Menu
 // ================================
 
-    const toolsDropdownBtn = document.getElementById('toolsDropdown');
+   /* const toolsDropdownBtn = document.getElementById('toolsDropdown');
     const toolsMenu = document.getElementById('toolsMenu');
 
     toolsDropdownBtn.addEventListener('click', () => {
@@ -184,4 +184,4 @@ window.addEventListener('load', () => {
             toolsMenu.style.maxHeight = toolsMenu.scrollHeight + "px"; // Expand to content height
             toolsDropdownBtn.classList.add('active');
         }
-    });
+    }); */
