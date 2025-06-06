@@ -204,7 +204,7 @@
         }
 
         .dropdown-menu.active {
-            max-height: auto;
+            max-height: 800px;
         }
 
         .dropdown-item {
