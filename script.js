@@ -164,3 +164,24 @@ window.addEventListener('scroll', () => {
 window.addEventListener('load', () => {
     document.body.style.overflow = 'visible';
 });
+
+// ================================
+// Auto Size Dropdown Menu
+// ================================
+
+    const toolsDropdownBtn = document.getElementById('toolsDropdown');
+    const toolsMenu = document.getElementById('toolsMenu');
+
+    toolsDropdownBtn.addEventListener('click', () => {
+        const isActive = toolsMenu.classList.contains('active');
+
+        if (isActive) {
+            toolsMenu.style.maxHeight = null; // Collapse
+            toolsMenu.classList.remove('active');
+            toolsDropdownBtn.classList.remove('active');
+        } else {
+            toolsMenu.classList.add('active'); // Add active class first
+            toolsMenu.style.maxHeight = toolsMenu.scrollHeight + "px"; // Expand to content height
+            toolsDropdownBtn.classList.add('active');
+        }
+    });
