@@ -289,7 +289,7 @@
     </div>
 
     <script>
-        let currentBgColor = '#667eea';
+        let currentBgColors = ['#667eea', '#764ba2'];
         let profileImageData = null;
         let logoImageData = null;
         let snap;
@@ -325,7 +325,7 @@
             ];
             
             const randomColors = colors[Math.floor(Math.random() * colors.length)];
-            currentBgColor = `linear-gradient(135deg, ${randomColors[0]}, ${randomColors[1]})`;
+            currentBgColors = randomColors;
             updateCard();
         }
 
@@ -368,9 +368,7 @@
             snap.clear();
 
             // Create gradient background
-            const gradient = snap.gradient(currentBgColor.includes('linear-gradient') 
-                ? currentBgColor.match(/#[A-Fa-f0-9]{6}/g) || ['#667eea', '#764ba2']
-                : [currentBgColor, currentBgColor]);
+            const gradient = snap.gradient(`l(0,0,1,1)${currentBgColors[0]}-${currentBgColors[1]}`);
             
             // Background rectangle with rounded corners
             const bg = snap.rect(0, 0, 350, 200).attr({
@@ -395,8 +393,9 @@
             // Add profile image if available
             if (profileImageData) {
                 const profileImage = snap.image(profileImageData, 20, 20, 60, 60);
+                const clipCircle = snap.circle(50, 50, 30);
                 profileImage.attr({
-                    clipPath: snap.circle(50, 50, 30).attr({fill: 'white'})
+                    clipPath: clipCircle
                 });
                 
                 // Profile image border
@@ -499,34 +498,98 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
             } else if (format === 'png') {
-                const svgData = snap.toString();
+                // Create a temporary canvas for high resolution
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const img = new Image();
                 
-                canvas.width = 1050; // 3x resolution for better quality
+                // Set high resolution
+                canvas.width = 1050; // 3x resolution
                 canvas.height = 600;
                 
+                // Create SVG data URL
+                const svgElement = document.querySelector('#businessCard');
+                const svgData = new XMLSerializer().serializeToString(svgElement);
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+                
+                const img = new Image();
                 img.onload = function() {
-                    ctx.drawImage(img, 0, 0, 1050, 600);
+                    // Fill background with white
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw the SVG
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Convert to PNG and download
                     canvas.toBlob(function(blob) {
-                        const url = URL.createObjectURL(blob);
+                        const pngUrl = URL.createObjectURL(blob);
                         const a = document.createElement('a');
-                        a.href = url;
+                        a.href = pngUrl;
                         a.download = 'business-card.png';
                         document.body.appendChild(a);
                         a.click();
                         document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    });
+                        URL.revokeObjectURL(pngUrl);
+                    }, 'image/png', 1.0);
+                    
+                    URL.revokeObjectURL(url);
                 };
                 
-                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-                const svgUrl = URL.createObjectURL(svgBlob);
-                img.src = svgUrl;
+                img.onerror = function() {
+                    console.error('Failed to load SVG for PNG conversion');
+                    // Fallback: try alternative method
+                    fallbackPngDownload();
+                };
+                
+                img.src = url;
             }
             
             showSuccessMessage();
+        }
+
+        // Fallback PNG download method
+        function fallbackPngDownload() {
+            const svgElement = document.querySelector('#businessCard');
+            const rect = svgElement.getBoundingClientRect();
+            
+            // Use html2canvas alternative - create canvas manually
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 1050;
+            canvas.height = 600;
+            
+            // Draw gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, currentBgColors[0]);
+            gradient.addColorStop(1, currentBgColors[1]);
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add text and basic elements
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 60px Arial';
+            ctx.fillText(document.getElementById('name').value || 'Your Name', 300, 135);
+            
+            ctx.font = '42px Arial';
+            ctx.fillText(document.getElementById('position').value || 'Your Position', 300, 195);
+            
+            ctx.font = '36px Arial';
+            ctx.fillText('📧 ' + (document.getElementById('email').value || 'your.email@example.com'), 75, 360);
+            ctx.fillText('📱 ' + (document.getElementById('phone').value || '+1 (555) 123-4567'), 75, 435);
+            
+            // Download the canvas
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'business-card.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/png', 1.0);
         }
 
         function showSuccessMessage() {
