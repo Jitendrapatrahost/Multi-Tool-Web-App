@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Binary Converter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .converter-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+        }
+
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(250, 112, 154, 0.4);
+        }
+
+        .btn-copy {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            color: #333;
+            min-width: 120px;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(168, 237, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            color: #333;
+            min-width: 120px;
+        }
+
+        .btn-clear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 154, 158, 0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4facfe;
+            display: block;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .features {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .features h3 {
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .feature-item {
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .feature-item i {
+            color: #4facfe;
+            width: 20px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .binary-output {
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .realtime-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .realtime-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .realtime-indicator.active {
+            background: #4facfe;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.6; 
+                transform: scale(1.2);
+            }
+        }
+
+        .conversion-mode {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-switch {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-option {
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 8px;
+            position: relative;
+            z-index: 2;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .mode-option.active {
+            color: white;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .mode-option:hover:not(.active) {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .conversion-arrow {
+            font-size: 1.5rem;
+            color: #4facfe;
+            transition: all 0.3s ease;
+            animation: pulse-arrow 2s infinite;
+        }
+
+        @keyframes pulse-arrow {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .section-badge {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .output-badge {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+        }
+
+        .conversion-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .info-icon {
+            color: #4facfe;
+            font-size: 1.1rem;
+        }
+
+        .info-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-code"></i> Text ↔ Binary Converter</h1>
+            <p>Convert text to binary and binary to text instantly</p>
+        </div>
+
+        <div class="conversion-mode">
+            <div class="mode-switch">
+                <button class="mode-option active" id="textToBinaryMode" onclick="switchMode('textToBinary')">
+                    <i class="fas fa-font"></i>
+                    <span>Text → Binary</span>
+                </button>
+                <button class="mode-option" id="binaryToTextMode" onclick="switchMode('binaryToText')">
+                    <i class="fas fa-code"></i>
+                    <span>Binary → Text</span>
+                </button>
+            </div>
+            <div class="conversion-arrow">
+                <i class="fas fa-arrow-right" id="conversionArrow"></i>
+            </div>
+        </div>
+
+        <div class="realtime-toggle">
+            <div class="toggle-label">
+                <i class="fas fa-bolt"></i>
+                <span>Real-time Conversion</span>
+            </div>
+            <div class="toggle-switch" id="realtimeToggle" onclick="toggleRealtime()">
+                <div class="toggle-slider"></div>
+            </div>
+            <div class="realtime-indicator" id="realtimeIndicator"></div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <div class="section-title" id="inputSectionTitle">
+                    <i class="fas fa-keyboard" id="inputSectionIcon"></i>
+                    <span id="inputSectionText">Text Input</span>
+                </div>
+                <div class="section-badge" id="inputBadge">INPUT</div>
+            </div>
+            <div class="conversion-info" id="conversionInfo">
+                <i class="fas fa-info-circle info-icon"></i>
+                <span class="info-text" id="infoText">Enter your text and click convert, or enable real-time mode</span>
+            </div>
+            <div class="input-group">
+                <textarea id="mainInput" placeholder="Enter your text here..."></textarea>
+            </div>
+            <div class="button-group" id="inputButtons">
+                <button class="btn btn-primary" id="convertButton" onclick="performConversion()">
+                    <i class="fas fa-arrow-down" id="convertIcon"></i>
+                    <span id="convertText">Convert to Binary</span>
+                </button>
+                <button class="btn btn-copy" onclick="copyText('mainInput')">
+                    <i class="fas fa-copy"></i>
+                    Copy Input
+                </button>
+                <button class="btn btn-clear" onclick="clearText()">
+                    <i class="fas fa-trash"></i>
+                    Clear All
+                </button>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <div class="section-title" id="outputSectionTitle">
+                    <i class="fas fa-code" id="outputSectionIcon"></i>
+                    <span id="outputSectionText">Binary Output</span>
+                </div>
+                <div class="section-badge output-badge" id="outputBadge">OUTPUT</div>
+            </div>
+            <div class="input-group">
+                <textarea id="mainOutput" class="binary-output" placeholder="Binary output will appear here..." readonly></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-copy" onclick="copyText('mainOutput')">
+                    <i class="fas fa-copy"></i>
+                    Copy Output
+                </button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-value" id="charCount">0</span>
+                <div class="stat-label">Characters</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="wordCount">0</span>
+                <div class="stat-label">Words</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="binaryLength">0</span>
+                <div class="stat-label">Binary Digits</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="byteCount">0</span>
+                <div class="stat-label">Bytes</div>
+            </div>
+        </div>
+
+        <div class="features">
+            <h3><i class="fas fa-star"></i> Features</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>Real-time Conversion</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Bidirectional Conversion</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Fully Responsive Design</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-copy"></i>
+                    <span>One-Click Copy</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Real-time Statistics</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-palette"></i>
+                    <span>Modern UI Design</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-rocket"></i>
+                    <span>Lightning Fast</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Copied to clipboard!</span>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const mainInput = document.getElementById('mainInput');
+        const mainOutput = document.getElementById('mainOutput');
+        const charCount = document.getElementById('charCount');
+        const wordCount = document.getElementById('wordCount');
+        const binaryLength = document.getElementById('binaryLength');
+        const byteCount = document.getElementById('byteCount');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const realtimeToggle = document.getElementById('realtimeToggle');
+        const realtimeIndicator = document.getElementById('realtimeIndicator');
+
+        // Mode switching elements
+        const textToBinaryMode = document.getElementById('textToBinaryMode');
+        const binaryToTextMode = document.getElementById('binaryToTextMode');
+        const conversionArrow = document.getElementById('conversionArrow');
+        const inputSectionTitle = document.getElementById('inputSectionTitle');
+        const outputSectionTitle = document.getElementById('outputSectionTitle');
+        const inputSectionIcon = document.getElementById('inputSectionIcon');
+        const outputSectionIcon = document.getElementById('outputSectionIcon');
+        const inputSectionText = document.getElementById('inputSectionText');
+        const outputSectionText = document.getElementById('outputSectionText');
+        const inputBadge = document.getElementById('inputBadge');
+        const outputBadge = document.getElementById('outputBadge');
+        const convertButton = document.getElementById('convertButton');
+        const convertIcon = document.getElementById('convertIcon');
+        const convertText = document.getElementById('convertText');
+        const conversionInfo = document.getElementById('conversionInfo');
+        const infoText = document.getElementById('infoText');
+
+        // Conversion mode state
+        let currentMode = 'textToBinary'; // 'textToBinary' or 'binaryToText'
+
+        // Real-time conversion state
+        let isRealtimeEnabled = false;
+        let conversionTimeout;
+
+        // Add event listeners for real-time updates
+        mainInput.addEventListener('input', handleMainInput);
+
+        // Handle main input with real-time conversion
+        function handleMainInput() {
+            updateStats();
+            
+            if (isRealtimeEnabled) {
+                clearTimeout(conversionTimeout);
+                conversionTimeout = setTimeout(() => {
+                    performConversionRealtime();
+                }, 300); // Debounce for 300ms
+            }
+        }
+
+        // Switch conversion mode
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update mode buttons
+            textToBinaryMode.classList.toggle('active', mode === 'textToBinary');
+            binaryToTextMode.classList.toggle('active', mode === 'binaryToText');
+            
+            if (mode === 'textToBinary') {
+                // Text to Binary Mode
+                inputSectionIcon.className = 'fas fa-keyboard';
+                inputSectionText.textContent = 'Text Input';
+                outputSectionIcon.className = 'fas fa-code';
+                outputSectionText.textContent = 'Binary Output';
+                convertIcon.className = 'fas fa-arrow-down';
+                convertText.textContent = 'Convert to Binary';
+                conversionArrow.innerHTML = '<i class="fas fa-arrow-right"></i>';
+                
+                mainInput.placeholder = 'Enter your text here...';
+                mainOutput.placeholder = 'Binary output will appear here...';
+                mainInput.classList.remove('binary-output');
+                mainOutput.classList.add('binary-output');
+                mainInput.readOnly = false;
+                mainOutput.readOnly = true;
+                
+                infoText.textContent = 'Enter your text and click convert, or enable real-time mode';
+                
+                showNotification('Switched to Text → Binary mode');
+            } else {
+                // Binary to Text Mode
+                inputSectionIcon.className = 'fas fa-code';
+                inputSectionText.textContent = 'Binary Input';
+                outputSectionIcon.className = 'fas fa-keyboard';
+                outputSectionText.textContent = 'Text Output';
+                convertIcon.className = 'fas fa-arrow-up';
+                convertText.textContent = 'Convert to Text';
+                conversionArrow.innerHTML = '<i class="fas fa-arrow-left"></i>';
+                
+                mainInput.placeholder = 'Enter binary code here (e.g., 01001000 01100101 01101100 01101100 01101111)...';
+                mainOutput.placeholder = 'Text output will appear here...';
+                mainInput.classList.add('binary-output');
+                mainOutput.classList.remove('binary-output');
+                mainInput.readOnly = false;
+                mainOutput.readOnly = true;
+                
+                infoText.textContent = 'Enter binary code (0s and 1s) and click convert, or enable real-time mode';
+                
+                showNotification('Switched to Binary → Text mode');
+            }
+            
+            // Clear inputs when switching modes
+            mainInput.value = '';
+            mainOutput.value = '';
+            updateStats();
+            
+            // Re-apply real-time conversion if enabled
+            if (isRealtimeEnabled && mainInput.value.trim()) {
+                performConversionRealtime();
+            }
+        }
+
+        // Perform conversion based on current mode
+        function performConversion() {
+            if (currentMode === 'textToBinary') {
+                convertToBinary();
+            } else {
+                convertToText();
+            }
+        }
+
+        // Perform real-time conversion based on current mode
+        function performConversionRealtime() {
+            if (currentMode === 'textToBinary') {
+                convertToBinaryRealtime();
+            } else {
+                convertToTextRealtime();
+            }
+        }
+
+        // Toggle real-time conversion
+        function toggleRealtime() {
+            isRealtimeEnabled = !isRealtimeEnabled;
+            
+            if (isRealtimeEnabled) {
+                realtimeToggle.classList.add('active');
+                realtimeIndicator.classList.add('active');
+                showNotification('Real-time conversion enabled!');
+                
+                // Convert immediately if there's existing text
+                if (textInput.value.trim()) {
+                    convertToBinaryRealtime();
+                } else if (binaryOutput.value.trim()) {
+                    convertToTextRealtime();
+                }
+            } else {
+                realtimeToggle.classList.remove('active');
+                realtimeIndicator.classList.remove('active');
+                clearTimeout(conversionTimeout);
+                showNotification('Real-time conversion disabled!');
+            }
+        }
+
+        // Real-time binary conversion (silent)
+        function convertToBinaryRealtime() {
+            const text = mainInput.value;
+            if (!text) {
+                mainOutput.value = '';
+                updateStats();
+                return;
+            }
+
+            let binary = '';
+            for (let i = 0; i < text.length; i++) {
+                const binaryChar = text.charCodeAt(i).toString(2).padStart(8, '0');
+                binary += binaryChar + ' ';
+            }
+            
+            mainOutput.value = binary.trim();
+            updateStats();
+        }
+
+        // Real-time text conversion (silent)
+        function convertToTextRealtime() {
+            const binary = mainInput.value.replace(/\s/g, '');
+            if (!binary) {
+                mainOutput.value = '';
+                updateStats();
+                return;
+            }
+
+            // Validate binary input (silent validation)
+            if (!/^[01]*$/.test(binary)) {
+                return; // Don't convert invalid binary in real-time
+            }
+
+            if (binary.length % 8 !== 0) {
+                return; // Don't convert incomplete bytes in real-time
+            }
+
+            let text = '';
+            for (let i = 0; i < binary.length; i += 8) {
+                const byte = binary.substr(i, 8);
+                const charCode = parseInt(byte, 2);
+                if (charCode >= 0 && charCode <= 127) { // Only ASCII characters in real-time
+                    text += String.fromCharCode(charCode);
+                }
+            }
+            
+            mainOutput.value = text;
+            updateStats();
+        }
+
+        // Convert text to binary
+        function convertToBinary() {
+            const text = mainInput.value;
+            if (!text.trim()) {
+                showNotification('Please enter some text first!', 'error');
+                return;
+            }
+
+            // Add loading effect
+            mainOutput.classList.add('loading', 'pulse');
+            
+            setTimeout(() => {
+                let binary = '';
+                for (let i = 0; i < text.length; i++) {
+                    const binaryChar = text.charCodeAt(i).toString(2).padStart(8, '0');
+                    binary += binaryChar + ' ';
+                }
+                
+                mainOutput.value = binary.trim();
+                mainOutput.classList.remove('loading', 'pulse');
+                updateStats();
+                showNotification('Text converted to binary successfully!');
+            }, 300);
+        }
+
+        // Convert binary to text
+        function convertToText() {
+            const binary = mainInput.value.replace(/\s/g, '');
+            if (!binary.trim()) {
+                showNotification('Please enter some binary first!', 'error');
+                return;
+            }
+
+            // Validate binary input
+            if (!/^[01]+$/.test(binary)) {
+                showNotification('Invalid binary format! Use only 0s and 1s.', 'error');
+                return;
+            }
+
+            if (binary.length % 8 !== 0) {
+                showNotification('Binary length must be multiple of 8!', 'error');
+                return;
+            }
+
+            // Add loading effect
+            mainOutput.classList.add('loading', 'pulse');
+
+            setTimeout(() => {
+                let text = '';
+                for (let i = 0; i < binary.length; i += 8) {
+                    const byte = binary.substr(i, 8);
+                    const charCode = parseInt(byte, 2);
+                    text += String.fromCharCode(charCode);
+                }
+                
+                mainOutput.value = text;
+                mainOutput.classList.remove('loading', 'pulse');
+                updateStats();
+                showNotification('Binary converted to text successfully!');
+            }, 300);
+        }
+
+        // Copy text to clipboard
+        async function copyText(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.value;
+            
+            if (!text.trim()) {
+                showNotification('Nothing to copy!', 'error');
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+                const type = elementId === 'mainInput' ? 'Input' : 'Output';
+                showNotification(`${type} copied to clipboard!`);
+            } catch (err) {
+                // Fallback for older browsers
+                element.select();
+                element.setSelectionRange(0, 99999);
+                document.execCommand('copy');
+                showNotification('Copied to clipboard!');
+            }
+        }
+
+        // Clear all text
+        function clearText() {
+            mainInput.value = '';
+            mainOutput.value = '';
+            updateStats();
+            showNotification('All text cleared!');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const inputText = mainInput.value;
+            const outputText = mainOutput.value;
+
+            if (currentMode === 'textToBinary') {
+                // Character count from input text
+                charCount.textContent = inputText.length;
+
+                // Word count from input text
+                const words = inputText.trim() ? inputText.trim().split(/\s+/).length : 0;
+                wordCount.textContent = words;
+
+                // Binary length from output
+                const binaryDigits = outputText.replace(/\s/g, '').length;
+                binaryLength.textContent = binaryDigits;
+
+                // Byte count
+                const bytes = Math.ceil(binaryDigits / 8);
+                byteCount.textContent = bytes;
+            } else {
+                // In binary to text mode, count from binary input
+                const binaryDigits = inputText.replace(/\s/g, '').length;
+                binaryLength.textContent = binaryDigits;
+
+                // Character count from output text
+                charCount.textContent = outputText.length;
+
+                // Word count from output text
+                const words = outputText.trim() ? outputText.trim().split(/\s+/).length : 0;
+                wordCount.textContent = words;
+
+                // Byte count
+                const bytes = Math.ceil(binaryDigits / 8);
+                byteCount.textContent = bytes;
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            notificationText.textContent = message;
+            
+            // Change notification style based on type
+            if (type === 'error') {
+                notification.style.background = 'linear-gradient(45deg, #ff6b6b, #ffa8a8)';
+            } else {
+                notification.style.background = 'linear-gradient(45deg, #56ab2f, #a8e6cf)';
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        if (document.activeElement === textInput) {
+                            convertToBinary();
+                        } else if (document.activeElement === binaryOutput) {
+                            convertToText();
+                        }
+                        break;
+                    case 'k':
+                        e.preventDefault();
+                        clearText();
+                        break;
+                }
+            }
+        });
+
+        // Initialize stats on page load
+        updateStats();
+
+        // Add some example functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add placeholder examples that change
+            const examples = [
+                'Hello World!',
+                'Binary Converter',
+                'JavaScript is awesome!',
+                'Convert any text to binary',
+                '01001000 01100101 01101100 01101100 01101111'
+            ];
+            
+            let currentExample = 0;
+            setInterval(() => {
+                if (!textInput.value && !binaryOutput.value) {
+                    textInput.placeholder = `Try: "${examples[currentExample]}"`;
+                    currentExample = (currentExample + 1) % examples.length;
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
