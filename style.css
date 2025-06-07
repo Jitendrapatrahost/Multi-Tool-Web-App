@@ -724,11 +724,11 @@
 }
 
 /* Alternative floating version (uncomment if preferred) */
-/*
+
 .explore-more-btn {
     animation: buttonFloat 4s ease-in-out infinite, buttonPulse 3s ease-in-out infinite;
 }
-*/
+
 
 /* Focus State for Accessibility */
 .explore-more-btn:focus {
