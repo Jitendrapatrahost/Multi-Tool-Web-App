@@ -613,3 +613,167 @@
   outline-offset: 2px;
 }
 
+/* Explore More Button Container */
+.explore-more-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+    padding: 2rem 0;
+}
+
+/* Main Explore More Button */
+.explore-more-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1.2rem 2.5rem;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 40%, #ff6b6b 100%);
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+        0 8px 32px rgba(240, 147, 251, 0.4),
+        0 4px 16px rgba(245, 87, 108, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    animation: buttonPulse 3s ease-in-out infinite;
+}
+
+/* Shimmer Effect Overlay */
+.explore-more-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+/* Arrow Icon */
+.explore-more-btn::after {
+    content: '→';
+    font-size: 1.3rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    margin-left: 0.2rem;
+}
+
+/* Hover Effects */
+.explore-more-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 15px 40px rgba(240, 147, 251, 0.6),
+        0 8px 25px rgba(245, 87, 108, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
+    background: linear-gradient(135deg, #ff6b6b 0%, #f5576c 40%, #f093fb 100%);
+}
+
+/* Shimmer on Hover */
+.explore-more-btn:hover::before {
+    left: 100%;
+}
+
+/* Arrow Animation on Hover */
+.explore-more-btn:hover::after {
+    transform: translateX(5px);
+}
+
+/* Active/Click Effect */
+.explore-more-btn:active {
+    transform: translateY(-1px) scale(1.02);
+    transition: transform 0.1s ease;
+}
+
+/* Pulsing Animation */
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow: 
+            0 8px 32px rgba(240, 147, 251, 0.4),
+            0 4px 16px rgba(245, 87, 108, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow: 
+            0 12px 40px rgba(240, 147, 251, 0.6),
+            0 6px 20px rgba(245, 87, 108, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Floating Animation */
+@keyframes buttonFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Alternative floating version (uncomment if preferred) */
+/*
+.explore-more-btn {
+    animation: buttonFloat 4s ease-in-out infinite, buttonPulse 3s ease-in-out infinite;
+}
+*/
+
+/* Focus State for Accessibility */
+.explore-more-btn:focus {
+    outline: none;
+    box-shadow: 
+        0 15px 40px rgba(240, 147, 251, 0.6),
+        0 8px 25px rgba(245, 87, 108, 0.5),
+        0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .explore-more-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        margin: 0 1rem;
+    }
+    
+    .explore-more-container {
+        margin-top: 3rem;
+        padding: 1.5rem 0;
+    }
+    
+    /* Reduce animations on mobile for performance */
+    .explore-more-btn {
+        animation: none;
+    }
+    
+    .explore-more-btn:hover {
+        transform: translateY(-2px) scale(1.02);
+    }
+}
+
+/* Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .explore-more-btn {
+        animation: none;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .explore-more-btn:hover {
+        transform: none;
+    }
+    
+    .explore-more-btn::before {
+        display: none;
+    }
+}
