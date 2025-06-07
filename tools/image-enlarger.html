@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Image Enlarger Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 60% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% {
+                background: 
+                    radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                    radial-gradient(circle at 60% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+            }
+            25% {
+                background: 
+                    radial-gradient(circle at 70% 40%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 30% 60%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 10% 90%, rgba(34, 197, 94, 0.07) 0%, transparent 50%);
+            }
+            50% {
+                background: 
+                    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 60% 60%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 10%, rgba(34, 197, 94, 0.06) 0%, transparent 50%);
+            }
+            75% {
+                background: 
+                    radial-gradient(circle at 30% 90%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.09) 0%, transparent 50%);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(16, 185, 129, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(16, 185, 129, 0.05) 0%, 
+                rgba(59, 130, 246, 0.03) 25%, 
+                rgba(168, 85, 247, 0.02) 50%, 
+                rgba(34, 197, 94, 0.04) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .container:hover::before {
+            opacity: 1;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(16, 172, 132, 0.9), rgba(52, 211, 153, 0.8));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(34, 197, 94, 0.3) 0%, 
+                rgba(16, 185, 129, 0.2) 25%, 
+                rgba(5, 150, 105, 0.3) 50%, 
+                rgba(6, 182, 212, 0.2) 75%, 
+                rgba(34, 197, 94, 0.3) 100%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .header h1, .header p {
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .upload-section {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.8), rgba(5, 150, 105, 0.7));
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transition: left 0.5s ease;
+        }
+
+        .upload-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 35px rgba(16, 185, 129, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.8));
+        }
+
+        .upload-section:hover::before {
+            left: 100%;
+        }
+
+        .upload-section.dragover {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-text {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: white;
+            color: #74b9ff;
+            transform: translateY(-2px);
+        }
+
+        .controls-panel {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.8), rgba(147, 51, 234, 0.7));
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .controls-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.15), 
+                transparent);
+            transition: left 0.5s ease;
+        }
+
+        .controls-panel:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 10px 25px rgba(168, 85, 247, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .controls-panel:hover::before {
+            left: 100%;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-label {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .control-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .control-btn:hover {
+            background: white;
+            color: #e84393;
+            transform: translateY(-2px);
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .zoom-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+
+        .zoom-btn:hover {
+            background: white;
+            color: #e84393;
+            transform: scale(1.1);
+        }
+
+        .image-container {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+            border-radius: 15px;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed rgba(16, 185, 129, 0.3);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .image-container:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(16, 185, 129, 0.1);
+        }
+
+        .image-container.has-image {
+            border: none;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(15, 23, 42, 0.8));
+        }
+
+        .image-viewer {
+            max-width: 100%;
+            max-height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            user-select: none;
+        }
+
+        .image-viewer:active {
+            cursor: grabbing;
+        }
+
+        .image-info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(37, 99, 235, 0.7));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .image-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.15), 
+                transparent);
+            transition: left 0.5s ease;
+        }
+
+        .image-info:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 10px 25px rgba(59, 130, 246, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .image-info:hover::before {
+            left: 100%;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .download-section {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(22, 163, 74, 0.7));
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .download-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.15), 
+                transparent);
+            transition: left 0.5s ease;
+        }
+
+        .download-section:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 10px 25px rgba(34, 197, 94, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .download-section:hover::before {
+            left: 100%;
+        }
+
+        .download-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .download-btn:hover {
+            background: white;
+            color: #00b894;
+            transform: translateY(-2px);
+        }
+
+        .placeholder-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .upload-section {
+                padding: 30px 20px;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .zoom-controls {
+                justify-content: center;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #74b9ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Advanced Image Enlarger</h1>
+            <p>Upload, zoom, pan, and enhance your images with powerful tools</p>
+        </div>
+
+        <div class="main-content">
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-icon">📤</div>
+                <div class="upload-text">Drag & Drop your image here</div>
+                <p>or</p>
+                <div class="file-input-wrapper">
+                    <input type="file" class="file-input" id="fileInput" accept="image/*">
+                    <button class="upload-btn">Choose Image File</button>
+                </div>
+                <p style="margin-top: 15px; opacity: 0.8;">Supports JPG, PNG, GIF, WebP</p>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your image...</p>
+            </div>
+
+            <div class="controls-panel" id="controlsPanel">
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label class="control-label">Zoom Level</label>
+                        <input type="range" id="zoomSlider" min="0.1" max="5" step="0.1" value="1" class="control-input">
+                        <span id="zoomValue" style="color: white; text-align: center;">100%</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Quick Zoom</label>
+                        <div class="zoom-controls">
+                            <button class="zoom-btn" id="zoomOut">-</button>
+                            <button class="zoom-btn" id="zoomReset">⌂</button>
+                            <button class="zoom-btn" id="zoomIn">+</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Actions</label>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="control-btn" id="rotateLeft">↶ Rotate</button>
+                            <button class="control-btn" id="resetImage">🔄 Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-container" id="imageContainer">
+                <div class="placeholder-text">Your enlarged image will appear here</div>
+            </div>
+
+            <div class="image-info" id="imageInfo">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-value" id="imageWidth">-</div>
+                        <div class="info-label">Width (px)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value" id="imageHeight">-</div>
+                        <div class="info-label">Height (px)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value" id="imageSize">-</div>
+                        <div class="info-label">File Size</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value" id="imageType">-</div>
+                        <div class="info-label">Format</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="download-section" id="downloadSection">
+                <h3 style="margin-bottom: 20px;">💾 Download Enhanced Image</h3>
+                <button class="download-btn" id="downloadOriginal">Download Original</button>
+                <button class="download-btn" id="downloadEnhanced">Download Enhanced</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ImageEnlarger {
+            constructor() {
+                this.currentImage = null;
+                this.currentZoom = 1;
+                this.currentRotation = 0;
+                this.isDragging = false;
+                this.dragStart = { x: 0, y: 0 };
+                this.imagePosition = { x: 0, y: 0 };
+                this.originalImageData = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+            }
+
+            initializeElements() {
+                this.uploadSection = document.getElementById('uploadSection');
+                this.fileInput = document.getElementById('fileInput');
+                this.loading = document.getElementById('loading');
+                this.controlsPanel = document.getElementById('controlsPanel');
+                this.imageContainer = document.getElementById('imageContainer');
+                this.imageInfo = document.getElementById('imageInfo');
+                this.downloadSection = document.getElementById('downloadSection');
+                this.zoomSlider = document.getElementById('zoomSlider');
+                this.zoomValue = document.getElementById('zoomValue');
+            }
+
+            bindEvents() {
+                // File upload events
+                this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                
+                // Drag and drop events
+                this.uploadSection.addEventListener('dragover', (e) => this.handleDragOver(e));
+                this.uploadSection.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                this.uploadSection.addEventListener('drop', (e) => this.handleDrop(e));
+
+                // Zoom controls
+                this.zoomSlider.addEventListener('input', (e) => this.handleZoomSlider(e));
+                document.getElementById('zoomIn').addEventListener('click', () => this.zoomIn());
+                document.getElementById('zoomOut').addEventListener('click', () => this.zoomOut());
+                document.getElementById('zoomReset').addEventListener('click', () => this.resetZoom());
+
+                // Other controls
+                document.getElementById('rotateLeft').addEventListener('click', () => this.rotateImage());
+                document.getElementById('resetImage').addEventListener('click', () => this.resetImage());
+
+                // Download buttons
+                document.getElementById('downloadOriginal').addEventListener('click', () => this.downloadOriginal());
+                document.getElementById('downloadEnhanced').addEventListener('click', () => this.downloadEnhanced());
+
+                // Image container events for panning
+                this.imageContainer.addEventListener('mousedown', (e) => this.startDrag(e));
+                this.imageContainer.addEventListener('mousemove', (e) => this.drag(e));
+                this.imageContainer.addEventListener('mouseup', () => this.endDrag());
+                this.imageContainer.addEventListener('mouseleave', () => this.endDrag());
+
+                // Touch events for mobile
+                this.imageContainer.addEventListener('touchstart', (e) => this.startDrag(e));
+                this.imageContainer.addEventListener('touchmove', (e) => this.drag(e));
+                this.imageContainer.addEventListener('touchend', () => this.endDrag());
+
+                // Wheel zoom
+                this.imageContainer.addEventListener('wheel', (e) => this.handleWheel(e));
+            }
+
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.processImage(file);
+                }
+            }
+
+            handleDragOver(event) {
+                event.preventDefault();
+                this.uploadSection.classList.add('dragover');
+            }
+
+            handleDragLeave(event) {
+                event.preventDefault();
+                this.uploadSection.classList.remove('dragover');
+            }
+
+            handleDrop(event) {
+                event.preventDefault();
+                this.uploadSection.classList.remove('dragover');
+                
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    this.processImage(files[0]);
+                }
+            }
+
+            processImage(file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select a valid image file!');
+                    return;
+                }
+
+                this.showLoading();
+                this.originalImageData = file;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.displayImage(img, file);
+                        this.hideLoading();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            displayImage(img, file) {
+                this.currentImage = img;
+                
+                // Create image element
+                const imageElement = document.createElement('img');
+                imageElement.src = img.src;
+                imageElement.className = 'image-viewer';
+                imageElement.id = 'currentImage';
+                
+                // Clear container and add image
+                this.imageContainer.innerHTML = '';
+                this.imageContainer.appendChild(imageElement);
+                this.imageContainer.classList.add('has-image');
+
+                // Update image info
+                this.updateImageInfo(img, file);
+
+                // Show controls and info
+                this.controlsPanel.style.display = 'block';
+                this.imageInfo.style.display = 'block';
+                this.downloadSection.style.display = 'block';
+
+                // Reset transformations
+                this.resetTransformations();
+            }
+
+            updateImageInfo(img, file) {
+                document.getElementById('imageWidth').textContent = img.naturalWidth;
+                document.getElementById('imageHeight').textContent = img.naturalHeight;
+                document.getElementById('imageSize').textContent = this.formatFileSize(file.size);
+                document.getElementById('imageType').textContent = file.type.split('/')[1].toUpperCase();
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            handleZoomSlider(event) {
+                this.currentZoom = parseFloat(event.target.value);
+                this.updateZoom();
+            }
+
+            zoomIn() {
+                this.currentZoom = Math.min(this.currentZoom + 0.2, 5);
+                this.zoomSlider.value = this.currentZoom;
+                this.updateZoom();
+            }
+
+            zoomOut() {
+                this.currentZoom = Math.max(this.currentZoom - 0.2, 0.1);
+                this.zoomSlider.value = this.currentZoom;
+                this.updateZoom();
+            }
+
+            resetZoom() {
+                this.currentZoom = 1;
+                this.zoomSlider.value = 1;
+                this.imagePosition = { x: 0, y: 0 };
+                this.updateZoom();
+            }
+
+            updateZoom() {
+                const image = document.getElementById('currentImage');
+                if (image) {
+                    image.style.transform = `scale(${this.currentZoom}) rotate(${this.currentRotation}deg) translate(${this.imagePosition.x}px, ${this.imagePosition.y}px)`;
+                }
+                this.zoomValue.textContent = Math.round(this.currentZoom * 100) + '%';
+            }
+
+            rotateImage() {
+                this.currentRotation += 90;
+                if (this.currentRotation >= 360) {
+                    this.currentRotation = 0;
+                }
+                this.updateZoom();
+            }
+
+            resetImage() {
+                this.currentZoom = 1;
+                this.currentRotation = 0;
+                this.imagePosition = { x: 0, y: 0 };
+                this.zoomSlider.value = 1;
+                this.updateZoom();
+            }
+
+            resetTransformations() {
+                this.currentZoom = 1;
+                this.currentRotation = 0;
+                this.imagePosition = { x: 0, y: 0 };
+                this.zoomSlider.value = 1;
+                this.updateZoom();
+            }
+
+            startDrag(event) {
+                if (!this.currentImage) return;
+                
+                this.isDragging = true;
+                const clientX = event.clientX || event.touches[0].clientX;
+                const clientY = event.clientY || event.touches[0].clientY;
+                
+                this.dragStart.x = clientX - this.imagePosition.x;
+                this.dragStart.y = clientY - this.imagePosition.y;
+                
+                event.preventDefault();
+            }
+
+            drag(event) {
+                if (!this.isDragging) return;
+                
+                const clientX = event.clientX || event.touches[0].clientX;
+                const clientY = event.clientY || event.touches[0].clientY;
+                
+                this.imagePosition.x = clientX - this.dragStart.x;
+                this.imagePosition.y = clientY - this.dragStart.y;
+                
+                this.updateZoom();
+                event.preventDefault();
+            }
+
+            endDrag() {
+                this.isDragging = false;
+            }
+
+            handleWheel(event) {
+                if (!this.currentImage) return;
+                
+                event.preventDefault();
+                
+                const delta = event.deltaY > 0 ? -0.1 : 0.1;
+                this.currentZoom = Math.max(0.1, Math.min(5, this.currentZoom + delta));
+                this.zoomSlider.value = this.currentZoom;
+                this.updateZoom();
+            }
+
+            downloadOriginal() {
+                if (!this.originalImageData) return;
+                
+                const url = URL.createObjectURL(this.originalImageData);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'original_' + this.originalImageData.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            downloadEnhanced() {
+                if (!this.currentImage) return;
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const img = this.currentImage;
+                canvas.width = img.naturalWidth * this.currentZoom;
+                canvas.height = img.naturalHeight * this.currentZoom;
+                
+                ctx.save();
+                ctx.scale(this.currentZoom, this.currentZoom);
+                
+                if (this.currentRotation !== 0) {
+                    ctx.translate(img.naturalWidth / 2, img.naturalHeight / 2);
+                    ctx.rotate((this.currentRotation * Math.PI) / 180);
+                    ctx.translate(-img.naturalWidth / 2, -img.naturalHeight / 2);
+                }
+                
+                ctx.drawImage(img, 0, 0);
+                ctx.restore();
+                
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'enhanced_image.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                });
+            }
+
+            showLoading() {
+                this.loading.style.display = 'block';
+            }
+
+            hideLoading() {
+                this.loading.style.display = 'none';
+            }
+        }
+
+        // Initialize the Image Enlarger when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ImageEnlarger();
+        });
+    </script>
+</body>
+</html>
