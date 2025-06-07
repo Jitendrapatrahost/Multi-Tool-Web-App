@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB to HEX Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 120px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 3px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .rgb-inputs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .rgb-input {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .rgb-input label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .rgb-input input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .rgb-input input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .color-picker {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .color-picker:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .hex-display {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .hex-display h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .hex-value {
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .random-colors {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .input-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .rgb-inputs {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 RGB ↔ HEX Converter</h1>
+        
+        <div class="color-preview" id="colorPreview"></div>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <h3>RGB Values</h3>
+                <div class="rgb-inputs">
+                    <div class="rgb-input">
+                        <label for="redInput">R</label>
+                        <input type="number" id="redInput" min="0" max="255" value="255">
+                    </div>
+                    <div class="rgb-input">
+                        <label for="greenInput">G</label>
+                        <input type="number" id="greenInput" min="0" max="255" value="0">
+                    </div>
+                    <div class="rgb-input">
+                        <label for="blueInput">B</label>
+                        <input type="number" id="blueInput" min="0" max="255" value="0">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <h3>Color Picker</h3>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="colorPicker" class="color-picker" value="#ff0000">
+                </div>
+            </div>
+        </div>
+        
+        <div class="hex-display">
+            <h3>HEX Value</h3>
+            <div class="hex-value" id="hexValue">#FF0000</div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="copyToClipboard()">📋 Copy HEX</button>
+            <button class="btn btn-secondary" onclick="generateRandomColor()">🎲 Random Color</button>
+        </div>
+        
+        <div class="random-colors" id="randomColors"></div>
+    </div>
+    
+    <div class="notification" id="notification">Copied to clipboard! 📋</div>
+
+    <script>
+        // Get DOM elements
+        const redInput = document.getElementById('redInput');
+        const greenInput = document.getElementById('greenInput');
+        const blueInput = document.getElementById('blueInput');
+        const colorPicker = document.getElementById('colorPicker');
+        const colorPreview = document.getElementById('colorPreview');
+        const hexValue = document.getElementById('hexValue');
+        const notification = document.getElementById('notification');
+        const randomColorsContainer = document.getElementById('randomColors');
+
+        // Convert RGB to HEX
+        function rgbToHex(r, g, b) {
+            const toHex = (n) => {
+                const hex = parseInt(n).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            };
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+        }
+
+        // Convert HEX to RGB
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // Update color preview and hex value
+        function updateColor() {
+            const r = parseInt(redInput.value) || 0;
+            const g = parseInt(greenInput.value) || 0;
+            const b = parseInt(blueInput.value) || 0;
+            
+            // Clamp values between 0 and 255
+            const clampedR = Math.max(0, Math.min(255, r));
+            const clampedG = Math.max(0, Math.min(255, g));
+            const clampedB = Math.max(0, Math.min(255, b));
+            
+            const hex = rgbToHex(clampedR, clampedG, clampedB);
+            const rgbColor = `rgb(${clampedR}, ${clampedG}, ${clampedB})`;
+            
+            colorPreview.style.background = rgbColor;
+            hexValue.textContent = hex;
+            colorPicker.value = hex.toLowerCase();
+        }
+
+        // Update RGB inputs from color picker
+        function updateFromColorPicker() {
+            const hex = colorPicker.value;
+            const rgb = hexToRgb(hex);
+            
+            if (rgb) {
+                redInput.value = rgb.r;
+                greenInput.value = rgb.g;
+                blueInput.value = rgb.b;
+                updateColor();
+            }
+        }
+
+        // Copy HEX value to clipboard
+        async function copyToClipboard() {
+            try {
+                await navigator.clipboard.writeText(hexValue.textContent);
+                showNotification('Copied to clipboard! 📋');
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = hexValue.textContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Copied to clipboard! 📋');
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Generate random color
+        function generateRandomColor() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            
+            redInput.value = r;
+            greenInput.value = g;
+            blueInput.value = b;
+            updateColor();
+        }
+
+        // Generate random color swatches
+        function generateRandomSwatches() {
+            randomColorsContainer.innerHTML = '';
+            const colors = [
+                '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+                '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
+            ];
+            
+            colors.forEach(color => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = color;
+                swatch.title = color;
+                swatch.onclick = () => {
+                    colorPicker.value = color;
+                    updateFromColorPicker();
+                };
+                randomColorsContainer.appendChild(swatch);
+            });
+        }
+
+        // Validate input values
+        function validateInput(input) {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 0) {
+                input.value = 0;
+            } else if (value > 255) {
+                input.value = 255;
+            }
+        }
+
+        // Event listeners
+        redInput.addEventListener('input', () => {
+            validateInput(redInput);
+            updateColor();
+        });
+
+        greenInput.addEventListener('input', () => {
+            validateInput(greenInput);
+            updateColor();
+        });
+
+        blueInput.addEventListener('input', () => {
+            validateInput(blueInput);
+            updateColor();
+        });
+
+        colorPicker.addEventListener('input', updateFromColorPicker);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'c':
+                        if (e.target.tagName !== 'INPUT') {
+                            e.preventDefault();
+                            copyToClipboard();
+                        }
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        generateRandomColor();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        updateColor();
+        generateRandomSwatches();
+
+        // Add some extra visual effects
+        document.addEventListener('mousemove', (e) => {
+            const container = document.querySelector('.container');
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const xPercent = (x / rect.width) * 100;
+            const yPercent = (y / rect.height) * 100;
+            
+            container.style.background = `rgba(255, 255, 255, ${0.95 + Math.sin(xPercent / 50) * 0.05})`;
+        });
+    </script>
+</body>
+</html>
