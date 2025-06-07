@@ -93,11 +93,28 @@ footer {
     <h1>Contact Us</h1>
     <p>Have questions or feedback? We’d love to hear from you!</p>
   </header>  <main>
-    <form action="https://formspree.io/f/xzzgdwgv" method="POST" data-aos="fade-up">
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" onsubmit="return showSuccessMessage();">
+  <!-- Required by Netlify -->
+  <input type="hidden" name="form-name" value="contact" />
+  <p hidden>
+    <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+  </p>
+
+  <!-- Contact Form Fields -->
   <input type="text" name="name" placeholder="Your Name" required />
   <input type="email" name="email" placeholder="Your Email" required />
   <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+
+  <!-- ✅ File Upload -->
+  <label style="color: #00ffd5;">Attach File (optional):</label>
+  <input type="file" name="attachment" style="margin-bottom: 20px;" />
+
   <button type="submit">Send Message</button>
+
+  <!-- ✅ Styled Success Message -->
+  <div id="form-success" style="display:none; margin-top: 20px; color: #00ffd5; font-weight: bold;">
+    ✅ Thank you! Your message has been sent.
+  </div>
 </form>  </main>  
 
 <input type="hidden" name="_redirect" value="https://allwebtools.netlify.app/thank-you.html">
@@ -112,5 +129,15 @@ footer {
       alert("Thank you for contacting us! We'll get back to you soon.");
       event.target.reset();
     }
-  </script></body>
+
+    
+  function showSuccessMessage() {
+    setTimeout(() => {
+      document.querySelector('form').reset();
+      document.getElementById('form-success').style.display = 'block';
+    }, 100);
+    return true;
+  }
+  </script>
+</body>
 </html>
