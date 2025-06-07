@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Help Center - All Web Tools</title>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 30px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    header h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      color: #00ffd5;
+      text-shadow: 0 0 8px #00ffd5;
+    }
+
+    header p {
+      font-size: 18px;
+      color: #d0fefe;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    .faq {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(0, 255, 213, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .faq:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(0, 255, 213, 0.25);
+    }
+
+    .faq h3 {
+      margin-top: 0;
+      color: #00ffd5;
+      font-size: 22px;
+    }
+
+    .faq p {
+      color: #d0fefe;
+      line-height: 1.6;
+    }
+
+    .contact {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .contact a {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 28px;
+      background-color: #00ffd5;
+      color: #0f2027;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 30px;
+      transition: background 0.3s ease;
+    }
+
+    .contact a:hover {
+      background-color: #00e6c0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #cccccc;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 32px;
+      }
+
+      .faq h3 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header data-aos="fade-down">
+    <h1>Help Center</h1>
+    <p>Quick answers to your questions about using All Web Tools</p>
+  </header>
+
+  <main>
+    <section class="faq" data-aos="fade-up" data-aos-delay="100">
+      <h3>🔧 How do I use the tools?</h3>
+      <p>Visit the <a href="/tools/" style="color:#00ffd5;">Tools</a> section, select any tool, and use it directly in your browser. No signup or installation is required.</p>
+    </section>
+
+    <section class="faq" data-aos="fade-up" data-aos-delay="200">
+      <h3>📱 Are these tools mobile-friendly?</h3>
+      <p>Yes, all our tools are responsive and fully optimized for mobile, tablet, and desktop devices.</p>
+    </section>
+
+    <section class="faq" data-aos="fade-up" data-aos-delay="300">
+      <h3>💾 Do I need to download anything?</h3>
+      <p>No download needed. All tools work instantly in your browser using JavaScript and HTML.</p>
+    </section>
+
+    <section class="faq" data-aos="fade-up" data-aos-delay="400">
+      <h3>🛡️ Is my data safe?</h3>
+      <p>Yes. None of your input data is saved or tracked. All processing is done locally on your device.</p>
+    </section>
+
+    <section class="faq" data-aos="fade-up" data-aos-delay="500">
+      <h3>💡 A tool is not working!</h3>
+      <p>Try reloading the page or clearing your browser cache. If the problem continues, contact us below.</p>
+    </section>
+
+    <div class="contact" data-aos="fade-up" data-aos-delay="600">
+      <p>Need further help?</p>
+      <a href="/info/contact.html">Contact Support</a>
+    </div>
+  </main>
+
+  <footer data-aos="fade-up" data-aos-delay="700">
+    &copy; 2025 All Web Tools. All rights reserved.
+  </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+  </script>
+</body>
+</html>
