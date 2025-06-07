@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Converter - Text Transformation Tool</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .input-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .input-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            background: white;
+        }
+
+        .char-count {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            color: #888;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .conversion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .conversion-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .conversion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .conversion-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .uppercase-icon { background: #ff6b6b; }
+        .lowercase-icon { background: #4ecdc4; }
+        .capitalize-icon { background: #45b7d1; }
+        .alternating-icon { background: #96ceb4; }
+        .camel-icon { background: #ffa726; }
+        .pascal-icon { background: #ab47bc; }
+        .snake-icon { background: #66bb6a; }
+        .kebab-icon { background: #ef5350; }
+        .title-icon { background: #42a5f5; }
+        .sentence-icon { background: #ff7043; }
+        .inverse-icon { background: #8d6e63; }
+        .dot-icon { background: #78909c; }
+
+        .output-text {
+            background: #f8f9fa;
+            border: 2px dashed #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 80px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+            margin-bottom: 15px;
+            word-break: break-word;
+            transition: all 0.3s ease;
+        }
+
+        .output-text.has-content {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 30px auto;
+            justify-content: center;
+        }
+
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .stats {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .conversion-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-text-width"></i> Case Converter</h1>
+            <p>Transform your text with powerful case conversion tools</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label class="input-label" for="inputText">Enter your text:</label>
+                    <textarea 
+                        id="inputText" 
+                        class="input-textarea" 
+                        placeholder="Type or paste your text here..."
+                        oninput="handleTextInput()"
+                    ></textarea>
+                    <div class="char-count" id="charCount">0 characters</div>
+                </div>
+            </div>
+
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="charCountStat">0</div>
+                    <div class="stat-label">Characters</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wordCountStat">0</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="sentenceCountStat">0</div>
+                    <div class="stat-label">Sentences</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="paragraphCountStat">0</div>
+                    <div class="stat-label">Paragraphs</div>
+                </div>
+            </div>
+
+            <div class="conversion-grid">
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon uppercase-icon">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            UPPERCASE
+                        </div>
+                    </div>
+                    <div class="output-text" id="uppercase"></div>
+                    <button class="copy-btn" onclick="copyText('uppercase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon lowercase-icon">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            lowercase
+                        </div>
+                    </div>
+                    <div class="output-text" id="lowercase"></div>
+                    <button class="copy-btn" onclick="copyText('lowercase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon capitalize-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            Capitalize Words
+                        </div>
+                    </div>
+                    <div class="output-text" id="capitalize"></div>
+                    <button class="copy-btn" onclick="copyText('capitalize')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon alternating-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            aLtErNaTiNg CaSe
+                        </div>
+                    </div>
+                    <div class="output-text" id="alternating"></div>
+                    <button class="copy-btn" onclick="copyText('alternating')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon camel-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            camelCase
+                        </div>
+                    </div>
+                    <div class="output-text" id="camelCase"></div>
+                    <button class="copy-btn" onclick="copyText('camelCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon pascal-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            PascalCase
+                        </div>
+                    </div>
+                    <div class="output-text" id="pascalCase"></div>
+                    <button class="copy-btn" onclick="copyText('pascalCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon snake-icon">
+                                <i class="fas fa-minus"></i>
+                            </div>
+                            snake_case
+                        </div>
+                    </div>
+                    <div class="output-text" id="snakeCase"></div>
+                    <button class="copy-btn" onclick="copyText('snakeCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon kebab-icon">
+                                <i class="fas fa-minus"></i>
+                            </div>
+                            kebab-case
+                        </div>
+                    </div>
+                    <div class="output-text" id="kebabCase"></div>
+                    <button class="copy-btn" onclick="copyText('kebabCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon title-icon">
+                                <i class="fas fa-heading"></i>
+                            </div>
+                            Title Case
+                        </div>
+                    </div>
+                    <div class="output-text" id="titleCase"></div>
+                    <button class="copy-btn" onclick="copyText('titleCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon sentence-icon">
+                                <i class="fas fa-align-left"></i>
+                            </div>
+                            Sentence case
+                        </div>
+                    </div>
+                    <div class="output-text" id="sentenceCase"></div>
+                    <button class="copy-btn" onclick="copyText('sentenceCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon inverse-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            iNVERSE cASE
+                        </div>
+                    </div>
+                    <div class="output-text" id="inverseCase"></div>
+                    <button class="copy-btn" onclick="copyText('inverseCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="conversion-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon dot-icon">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            dot.case
+                        </div>
+                    </div>
+                    <div class="output-text" id="dotCase"></div>
+                    <button class="copy-btn" onclick="copyText('dotCase')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <button class="clear-btn" onclick="clearAll()">
+                <i class="fas fa-trash"></i> Clear All
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-check"></i> Copied to clipboard!
+    </div>
+
+    <script>
+        function handleTextInput() {
+            const inputText = document.getElementById('inputText').value;
+            updateStats(inputText);
+            convertText(inputText);
+        }
+
+        function updateStats(text) {
+            const charCount = text.length;
+            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const sentenceCount = text.trim() === '' ? 0 : text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+            const paragraphCount = text.trim() === '' ? 0 : text.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
+
+            document.getElementById('charCount').textContent = `${charCount} characters`;
+            document.getElementById('charCountStat').textContent = charCount;
+            document.getElementById('wordCountStat').textContent = wordCount;
+            document.getElementById('sentenceCountStat').textContent = sentenceCount;
+            document.getElementById('paragraphCountStat').textContent = paragraphCount;
+        }
+
+        function convertText(text) {
+            if (!text) {
+                clearOutputs();
+                return;
+            }
+
+            // UPPERCASE
+            const uppercase = text.toUpperCase();
+            updateOutput('uppercase', uppercase);
+
+            // lowercase
+            const lowercase = text.toLowerCase();
+            updateOutput('lowercase', lowercase);
+
+            // Capitalize Words
+            const capitalize = text.replace(/\b\w/g, l => l.toUpperCase());
+            updateOutput('capitalize', capitalize);
+
+            // aLtErNaTiNg CaSe
+            const alternating = text.split('').map((char, index) => 
+                index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
+            ).join('');
+            updateOutput('alternating', alternating);
+
+            // camelCase
+            const camelCase = text.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => 
+                index === 0 ? word.toLowerCase() : word.toUpperCase()
+            ).replace(/\s+/g, '');
+            updateOutput('camelCase', camelCase);
+
+            // PascalCase
+            const pascalCase = text.replace(/(?:^\w|[A-Z]|\b\w)/g, word => 
+                word.toUpperCase()
+            ).replace(/\s+/g, '');
+            updateOutput('pascalCase', pascalCase);
+
+            // snake_case
+            const snakeCase = text.toLowerCase().replace(/\s+/g, '_').replace(/[^\w_]/g, '');
+            updateOutput('snakeCase', snakeCase);
+
+            // kebab-case
+            const kebabCase = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+            updateOutput('kebabCase', kebabCase);
+
+            // Title Case
+            const titleCase = text.replace(/\w\S*/g, (txt) => 
+                txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+            );
+            updateOutput('titleCase', titleCase);
+
+            // Sentence case
+            const sentenceCase = text.toLowerCase().replace(/^\w/, c => c.toUpperCase());
+            updateOutput('sentenceCase', sentenceCase);
+
+            // iNVERSE cASE
+            const inverseCase = text.split('').map(char => 
+                char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()
+            ).join('');
+            updateOutput('inverseCase', inverseCase);
+
+            // dot.case
+            const dotCase = text.toLowerCase().replace(/\s+/g, '.').replace(/[^\w.]/g, '');
+            updateOutput('dotCase', dotCase);
+        }
+
+        function updateOutput(id, text) {
+            const element = document.getElementById(id);
+            element.textContent = text;
+            element.classList.add('has-content');
+        }
+
+        function clearOutputs() {
+            const outputs = document.querySelectorAll('.output-text');
+            outputs.forEach(output => {
+                output.textContent = '';
+                output.classList.remove('has-content');
+            });
+        }
+
+        function copyText(id) {
+            const text = document.getElementById(id).textContent;
+            if (!text) return;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+                
+                // Update button temporarily
+                const btn = event.target.closest('.copy-btn');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            clearOutputs();
+            updateStats('');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats('');
+        });
+    </script>
+</body>
+</html>
