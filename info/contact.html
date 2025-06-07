@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us - All Web Tools</title>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+    }header {
+  text-align: center;
+  padding: 60px 20px 30px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+header h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #00ffd5;
+  text-shadow: 0 0 8px #00ffd5;
+}
+
+header p {
+  font-size: 18px;
+  color: #d0fefe;
+}
+
+main {
+  max-width: 600px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+form {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 213, 0.15);
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+button {
+  background-color: #00ffd5;
+  color: #0f2027;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #00e6c0;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  color: #cccccc;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+  </style>
+</head>
+<body>
+  <header data-aos="fade-down">
+    <h1>Contact Us</h1>
+    <p>Have questions or feedback? We’d love to hear from you!</p>
+  </header>  <main>
+    <form action="https://formspree.io/f/xzzgdwgv" method="POST" data-aos="fade-up">
+  <input type="text" name="name" placeholder="Your Name" required />
+  <input type="email" name="email" placeholder="Your Email" required />
+  <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+  <button type="submit">Send Message</button>
+</form>  </main>  
+
+<input type="hidden" name="_redirect" value="https://yourdomain.com/thank-you.html">
+
+<footer data-aos="fade-up">
+    &copy; 2025 All Web Tools. All rights reserved.
+  </footer>  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>  <script>
+    AOS.init({ duration: 800, once: true });
+
+    function submitForm(event) {
+      event.preventDefault();
+      alert("Thank you for contacting us! We'll get back to you soon.");
+      event.target.reset();
+    }
+  </script></body>
+</html>
