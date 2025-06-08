@@ -203,8 +203,13 @@
             margin-bottom: 1rem;
         }
 
-        .dropdown-menu.active {
+        /*.dropdown-menu.active {
             max-height: 1369px;
+        }*/
+
+        .dropdown-menu.active {
+             max-height: 80vh;         /* Responsive: grows up to 80% of screen */
+             overflow-y: auto;         /* Scroll appears if too long */
         }
 
         .dropdown-item {
