@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to PDF Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-100px); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .input-section, .preview-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .color-input-group input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            margin-left: 1rem;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            margin-left: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+
+        .preview-area {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: left;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+
+            .btn-download {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+
+        .loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 Text to PDF Generator</h1>
+            <p>Convert your text into beautiful PDF documents with custom styling</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="charCount">0</div>
+                    <div class="stat-label">Characters</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wordCount">0</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="pdfCount">0</div>
+                    <div class="stat-label">PDFs Created</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="section-header">
+                    ⚙️ Configuration & Input
+                </div>
+                <div class="section-content">
+                    <form id="pdfForm">
+                        <div class="form-group">
+                            <label for="title">Document Title</label>
+                            <input type="text" id="title" placeholder="Enter document title...">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fontSize">Font Size</label>
+                                <select id="fontSize">
+                                    <option value="12">12pt</option>
+                                    <option value="14" selected>14pt</option>
+                                    <option value="16">16pt</option>
+                                    <option value="18">18pt</option>
+                                    <option value="20">20pt</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fontFamily">Font Family</label>
+                                <select id="fontFamily">
+                                    <optgroup label="Serif Fonts">
+                                        <option value="times" selected>Times New Roman</option>
+                                        <option value="georgia">Georgia</option>
+                                        <option value="serif">Times (Serif)</option>
+                                        <option value="palatino">Palatino</option>
+                                        <option value="bookman">Bookman</option>
+                                    </optgroup>
+                                    <optgroup label="Sans-Serif Fonts">
+                                        <option value="helvetica">Helvetica</option>
+                                        <option value="arial">Arial</option>
+                                        <option value="verdana">Verdana</option>
+                                        <option value="calibri">Calibri</option>
+                                        <option value="trebuchet">Trebuchet MS</option>
+                                        <option value="tahoma">Tahoma</option>
+                                        <option value="opensans">Open Sans</option>
+                                        <option value="roboto">Roboto</option>
+                                        <option value="lato">Lato</option>
+                                        <option value="montserrat">Montserrat</option>
+                                    </optgroup>
+                                    <optgroup label="Monospace Fonts">
+                                        <option value="courier">Courier New</option>
+                                        <option value="monaco">Monaco</option>
+                                        <option value="consolas">Consolas</option>
+                                        <option value="menlo">Menlo</option>
+                                        <option value="inconsolata">Inconsolata</option>
+                                        <option value="sourcecodepro">Source Code Pro</option>
+                                    </optgroup>
+                                    <optgroup label="Display Fonts">
+                                        <option value="impact">Impact</option>
+                                        <option value="comicsans">Comic Sans MS</option>
+                                        <option value="papyrus">Papyrus</option>
+                                        <option value="chalkduster">Chalkduster</option>
+                                        <option value="marker">Marker Felt</option>
+                                    </optgroup>
+                                    <optgroup label="Cursive Fonts">
+                                        <option value="brush">Brush Script</option>
+                                        <option value="lucida">Lucida Handwriting</option>
+                                        <option value="dancing">Dancing Script</option>
+                                        <option value="pacifico">Pacifico</option>
+                                        <option value="great">Great Vibes</option>
+                                    </optgroup>
+                                    <optgroup label="Symbol Fonts">
+                                        <option value="symbol">Symbol</option>
+                                        <option value="zapfdingbats">ZapfDingbats</option>
+                                        <option value="wingdings">Wingdings</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fontWeight">Font Weight</label>
+                                <select id="fontWeight">
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="bold">Bold</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fontStyle">Font Style</label>
+                                <select id="fontStyle">
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="italic">Italic</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="textColor">Text Color</label>
+                                <div class="color-input-group">
+                                    <input type="color" id="textColor" value="#000000">
+                                    <span id="textColorValue">#000000</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="pageFormat">Page Format</label>
+                                <select id="pageFormat">
+                                    <option value="a4" selected>A4</option>
+                                    <option value="letter">Letter</option>
+                                    <option value="legal">Legal</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="orientation">Orientation</label>
+                                <select id="orientation">
+                                    <option value="portrait" selected>Portrait</option>
+                                    <option value="landscape">Landscape</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="lineSpacing">Line Spacing</label>
+                                <select id="lineSpacing">
+                                    <option value="1">Single</option>
+                                    <option value="1.5" selected>1.5x</option>
+                                    <option value="2">Double</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="textContent">Content</label>
+                            <textarea id="textContent" placeholder="Enter your text content here..." rows="8"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="btn" onclick="generatePDF()">
+                                📄 Generate PDF
+                            </button>
+                            <button type="button" class="btn btn-download" onclick="downloadPDF()" id="downloadBtn" style="display: none;">
+                                ⬇️ Download PDF
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                                🗑️ Clear All
+                            </button>
+                        </div>
+
+                        <div class="loading" id="loadingDiv">
+                            <div class="spinner"></div>
+                            <span style="margin-left: 1rem;">Generating PDF...</span>
+                        </div>
+
+                        <div id="statusMessage"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <div class="section-header">
+                    👁️ Live Preview
+                </div>
+                <div class="section-content">
+                    <div class="preview-area">
+                        <div class="preview-content" id="previewContent">
+                            <div class="preview-title" id="previewTitle">Document Preview</div>
+                            <div id="previewText">Your text will appear here as you type...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Custom Styling</h3>
+                <p>Choose fonts, colors, and formatting options</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Responsive Design</h3>
+                <p>Works perfectly on all devices</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Instant Preview</h3>
+                <p>See changes in real-time</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3>Download Ready</h3>
+                <p>High-quality PDF generation</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pdfCounter = 0;
+        let generatedPDF = null; // Store the generated PDF for download
+
+        // Update statistics
+        function updateStats() {
+            const text = document.getElementById('textContent').value;
+            const charCount = text.length;
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+            
+            document.getElementById('charCount').textContent = charCount;
+            document.getElementById('wordCount').textContent = wordCount;
+        }
+
+        // Update preview
+        function updatePreview() {
+            const title = document.getElementById('title').value || 'Document Preview';
+            const content = document.getElementById('textContent').value || 'Your text will appear here as you type...';
+            const fontSize = document.getElementById('fontSize').value;
+            const fontFamily = document.getElementById('fontFamily').value;
+            const fontWeight = document.getElementById('fontWeight') ? document.getElementById('fontWeight').value : 'normal';
+            const fontStyle = document.getElementById('fontStyle') ? document.getElementById('fontStyle').value : 'normal';
+            const textColor = document.getElementById('textColor').value;
+            const lineSpacing = document.getElementById('lineSpacing').value;
+            
+            const previewTitle = document.getElementById('previewTitle');
+            const previewText = document.getElementById('previewText');
+            const previewContent = document.getElementById('previewContent');
+            
+            previewTitle.textContent = title;
+            previewText.textContent = content;
+            
+            // Apply styling to preview
+            previewContent.style.fontSize = fontSize + 'px';
+            previewContent.style.color = textColor;
+            previewContent.style.lineHeight = lineSpacing;
+            
+            // Font family mapping for preview (with web-safe fallbacks)
+            const fontMap = {
+                // Serif Fonts
+                'times': 'Times New Roman, Times, serif',
+                'georgia': 'Georgia, Times New Roman, serif',
+                'serif': 'Times, Times New Roman, serif',
+                'palatino': 'Palatino, Book Antiqua, serif',
+                'bookman': 'Bookman Old Style, serif',
+                
+                // Sans-Serif Fonts
+                'helvetica': 'Helvetica, Arial, sans-serif',
+                'arial': 'Arial, Helvetica, sans-serif',
+                'verdana': 'Verdana, Geneva, sans-serif',
+                'calibri': 'Calibri, Candara, sans-serif',
+                'trebuchet': 'Trebuchet MS, Helvetica, sans-serif',
+                'tahoma': 'Tahoma, Verdana, sans-serif',
+                'opensans': 'Open Sans, Helvetica, Arial, sans-serif',
+                'roboto': 'Roboto, Arial, sans-serif',
+                'lato': 'Lato, Helvetica, Arial, sans-serif',
+                'montserrat': 'Montserrat, Helvetica, Arial, sans-serif',
+                
+                // Monospace Fonts
+                'courier': 'Courier New, Courier, monospace',
+                'monaco': 'Monaco, Menlo, monospace',
+                'consolas': 'Consolas, Monaco, monospace',
+                'menlo': 'Menlo, Monaco, monospace',
+                'inconsolata': 'Inconsolata, Consolas, monospace',
+                'sourcecodepro': 'Source Code Pro, Consolas, monospace',
+                
+                // Display Fonts
+                'impact': 'Impact, Arial Black, sans-serif',
+                'comicsans': 'Comic Sans MS, cursive',
+                'papyrus': 'Papyrus, fantasy',
+                'chalkduster': 'Chalkduster, fantasy',
+                'marker': 'Marker Felt, fantasy',
+                
+                // Cursive Fonts
+                'brush': 'Brush Script MT, cursive',
+                'lucida': 'Lucida Handwriting, cursive',
+                'dancing': 'Dancing Script, cursive',
+                'pacifico': 'Pacifico, cursive',
+                'great': 'Great Vibes, cursive',
+                
+                // Symbol Fonts
+                'symbol': 'Symbol, serif',
+                'zapfdingbats': 'ZapfDingbats, serif',
+                'wingdings': 'Wingdings, serif'
+            };
+            
+            previewContent.style.fontFamily = fontMap[fontFamily] || fontMap['times'];
+            previewContent.style.fontWeight = fontWeight;
+            previewContent.style.fontStyle = fontStyle;
+        }
+
+        // Color picker updates
+        document.getElementById('textColor').addEventListener('input', function() {
+            document.getElementById('textColorValue').textContent = this.value;
+            updatePreview();
+        });
+
+        // Real-time updates
+        document.getElementById('textContent').addEventListener('input', function() {
+            updateStats();
+            updatePreview();
+        });
+
+        // Update preview when any form element changes
+        const formElements = ['title', 'fontSize', 'fontFamily', 'fontWeight', 'fontStyle', 'lineSpacing'];
+        formElements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', updatePreview);
+            }
+        });
+
+        // Generate PDF function
+        function generatePDF() {
+            const title = document.getElementById('title').value || 'Untitled Document';
+            const content = document.getElementById('textContent').value;
+            
+            if (!content.trim()) {
+                showStatus('Please enter some text content!', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingDiv').style.display = 'flex';
+            
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    
+                    // Get configuration
+                    const fontSize = parseInt(document.getElementById('fontSize').value);
+                    const fontFamily = document.getElementById('fontFamily').value;
+                    const fontWeight = document.getElementById('fontWeight') ? document.getElementById('fontWeight').value : 'normal';
+                    const fontStyle = document.getElementById('fontStyle') ? document.getElementById('fontStyle').value : 'normal';
+                    const textColor = document.getElementById('textColor').value;
+                    const pageFormat = document.getElementById('pageFormat').value;
+                    const orientation = document.getElementById('orientation').value;
+                    const lineSpacing = parseFloat(document.getElementById('lineSpacing').value);
+                    
+                    // Create PDF with high quality settings
+                    const pdf = new jsPDF({
+                        orientation: orientation,
+                        unit: 'pt',
+                        format: pageFormat,
+                        putOnlyUsedFonts: true,
+                        compress: false, // High quality - no compression
+                        precision: 16 // Higher precision for better quality
+                    });
+                    
+                    // Map font families to jsPDF supported fonts
+                    const pdfFontMap = {
+                        // Core fonts supported by jsPDF
+                        'times': 'times',
+                        'georgia': 'times',
+                        'serif': 'times',
+                        'palatino': 'times',
+                        'bookman': 'times',
+                        'helvetica': 'helvetica',
+                        'arial': 'helvetica',
+                        'verdana': 'helvetica',
+                        'calibri': 'helvetica',
+                        'trebuchet': 'helvetica',
+                        'tahoma': 'helvetica',
+                        'opensans': 'helvetica',
+                        'roboto': 'helvetica',
+                        'lato': 'helvetica',
+                        'montserrat': 'helvetica',
+                        'courier': 'courier',
+                        'monaco': 'courier',
+                        'consolas': 'courier',
+                        'menlo': 'courier',
+                        'inconsolata': 'courier',
+                        'sourcecodepro': 'courier',
+                        'impact': 'helvetica',
+                        'comicsans': 'helvetica',
+                        'papyrus': 'times',
+                        'chalkduster': 'helvetica',
+                        'marker': 'helvetica',
+                        'brush': 'times',
+                        'lucida': 'times',
+                        'dancing': 'times',
+                        'pacifico': 'times',
+                        'great': 'times',
+                        'symbol': 'symbol',
+                        'zapfdingbats': 'zapfdingbats',
+                        'wingdings': 'symbol'
+                    };
+                    
+                    const pdfFontFamily = pdfFontMap[fontFamily] || 'times';
+                    
+                    // Determine font style for PDF
+                    let pdfFontStyle = 'normal';
+                    if (fontWeight === 'bold' && fontStyle === 'italic') {
+                        pdfFontStyle = 'bolditalic';
+                    } else if (fontWeight === 'bold') {
+                        pdfFontStyle = 'bold';
+                    } else if (fontStyle === 'italic') {
+                        pdfFontStyle = 'italic';
+                    }
+                    
+                    pdf.setFont(pdfFontFamily, pdfFontStyle);
+                    
+                    // Convert hex color to RGB
+                    const hexToRgb = (hex) => {
+                        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                        return result ? {
+                            r: parseInt(result[1], 16),
+                            g: parseInt(result[2], 16),
+                            b: parseInt(result[3], 16)
+                        } : null;
+                    };
+                    
+                    const color = hexToRgb(textColor);
+                    if (color) {
+                        pdf.setTextColor(color.r, color.g, color.b);
+                    }
+                    
+                    // Page dimensions
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    const margin = 40;
+                    const textWidth = pageWidth - (margin * 2);
+                    
+                    let yPosition = margin + 40;
+                    
+                    // Add title with proper font styling
+                    if (title.trim()) {
+                        pdf.setFontSize(fontSize + 4);
+                        
+                        // Set title to bold version of selected font
+                        const titleStyle = fontWeight === 'bold' ? 
+                            (fontStyle === 'italic' ? 'bolditalic' : 'bold') : 
+                            (fontStyle === 'italic' ? 'italic' : 'bold');
+                            
+                        if (pdfFontFamily === 'symbol' || pdfFontFamily === 'zapfdingbats') {
+                            pdf.setFont(pdfFontFamily, 'normal');
+                        } else {
+                            pdf.setFont(pdfFontFamily, titleStyle);
+                        }
+                        
+                        const titleLines = pdf.splitTextToSize(title, textWidth);
+                        titleLines.forEach(line => {
+                            pdf.text(line, margin, yPosition);
+                            yPosition += (fontSize + 4) * lineSpacing;
+                        });
+                        
+                        yPosition += 20; // Extra space after title
+                        
+                        // Reset to original font style for content
+                        pdf.setFont(pdfFontFamily, pdfFontStyle);
+                    }
+                    
+                    // Add content
+                    pdf.setFontSize(fontSize);
+                    const lines = pdf.splitTextToSize(content, textWidth);
+                    
+                    lines.forEach(line => {
+                        // Check if we need a new page
+                        if (yPosition > pageHeight - margin) {
+                            pdf.addPage();
+                            yPosition = margin + 20;
+                        }
+                        
+                        pdf.text(line, margin, yPosition);
+                        yPosition += fontSize * lineSpacing;
+                    });
+                    
+                    // Add metadata
+                    pdf.setProperties({
+                        title: title,
+                        creator: 'Text to PDF Generator',
+                        creationDate: new Date()
+                    });
+                    
+                    // Generate filename
+                    const filename = title.trim() 
+                        ? title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.pdf'
+                        : 'document.pdf';
+                    
+                    // Store the PDF for download
+                    generatedPDF = {
+                        pdf: pdf,
+                        filename: filename
+                    };
+                    
+                    // Show download button
+                    document.getElementById('downloadBtn').style.display = 'inline-block';
+                    
+                    // Auto-download the PDF
+                    pdf.save(filename);
+                    
+                    // Update counter and show success
+                    pdfCounter++;
+                    document.getElementById('pdfCount').textContent = pdfCounter;
+                    showStatus('High-quality PDF generated successfully! 🎉 You can download it again using the download button.', 'success');
+                    
+                } catch (error) {
+                    console.error('PDF Generation Error:', error);
+                    showStatus('Error generating PDF. Please try again.', 'error');
+                }
+                
+                // Hide loading
+                document.getElementById('loadingDiv').style.display = 'none';
+                            }, 500);
+        }
+
+        // Download the generated PDF
+        function downloadPDF() {
+            if (generatedPDF) {
+                try {
+                    generatedPDF.pdf.save(generatedPDF.filename);
+                    showStatus('PDF downloaded successfully! 📥', 'success');
+                } catch (error) {
+                    console.error('Download Error:', error);
+                    showStatus('Error downloading PDF. Please regenerate the PDF.', 'error');
+                }
+            } else {
+                showStatus('No PDF available. Please generate a PDF first.', 'error');
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('pdfForm').reset();
+            document.getElementById('textColorValue').textContent = '#000000';
+            document.getElementById('downloadBtn').style.display = 'none';
+            generatedPDF = null; // Clear stored PDF
+            updateStats();
+            updatePreview();
+            showStatus('Form cleared successfully!', 'success');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            updatePreview();
+            
+            // Sample text for demonstration
+            const sampleText = `Welcome to the Text to PDF Generator!
+
+This tool allows you to convert your text into professional PDF documents with custom styling options.
+
+Features:
+• Custom fonts and colors
+• Multiple page formats
+• Real-time preview
+• Responsive design
+• Professional output
+
+Simply enter your text, customize the appearance, and generate your PDF with one click!`;
+            
+            document.getElementById('textContent').value = sampleText;
+            document.getElementById('title').value = 'Sample Document';
+            updateStats();
+            updatePreview();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 's':
+                        e.preventDefault();
+                        generatePDF();
+                        break;
+                    case 'k':
+                        e.preventDefault();
+                        clearForm();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
