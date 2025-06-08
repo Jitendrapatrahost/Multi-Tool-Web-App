@@ -208,7 +208,7 @@
         }*/
 
         .dropdown-menu.active {
-             max-height: 80vh;         /* Responsive: grows up to 80% of screen */
+             max-height: 50vh;         /* Responsive: grows up to 80% of screen */
              overflow-y: auto;         /* Scroll appears if too long */
         }
 
