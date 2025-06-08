@@ -545,6 +545,150 @@
                         <i class="fas fa-copy"></i> Copy
                     </button>
                 </div>
+
+                <!-- SpongeBob Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #ffc107;">
+                <i class="fas fa-smile-wink"></i>
+            </div>
+            SpongeBob Case
+        </div>
+    </div>
+    <div class="output-text" id="spongebobCase"></div>
+    <button class="copy-btn" onclick="copyText('spongebobCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- Reverse Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #9c27b0;">
+                <i class="fas fa-sync-alt"></i>
+            </div>
+            Reverse Case
+        </div>
+    </div>
+    <div class="output-text" id="reverseCase"></div>
+    <button class="copy-btn" onclick="copyText('reverseCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- Double Underscore Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #3f51b5;">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+            __Double__Underscore__
+        </div>
+    </div>
+    <div class="output-text" id="doubleUnderscoreCase"></div>
+    <button class="copy-btn" onclick="copyText('doubleUnderscoreCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- Space Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #607d8b;">
+                <i class="fas fa-arrows-alt-h"></i>
+            </div>
+            Space Case
+        </div>
+    </div>
+    <div class="output-text" id="spaceCase"></div>
+    <button class="copy-btn" onclick="copyText('spaceCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- No Space Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #795548;">
+                <i class="fas fa-ban"></i>
+            </div>
+            NoSpaceCase
+        </div>
+    </div>
+    <div class="output-text" id="noSpaceCase"></div>
+    <button class="copy-btn" onclick="copyText('noSpaceCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- ZigZag Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #00bcd4;">
+                <i class="fas fa-wave-square"></i>
+            </div>
+            ZigZag Case
+        </div>
+    </div>
+    <div class="output-text" id="zigzagCase"></div>
+    <button class="copy-btn" onclick="copyText('zigzagCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- Emoji Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #ff5722;">
+                <i class="fas fa-fire"></i>
+            </div>
+            Emoji🔥Case
+        </div>
+    </div>
+    <div class="output-text" id="emojiCase"></div>
+    <button class="copy-btn" onclick="copyText('emojiCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- CONSTANT_CASE -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #4caf50;">
+                <i class="fas fa-lock"></i>
+            </div>
+            CONSTANT_CASE
+        </div>
+    </div>
+    <div class="output-text" id="constantCase"></div>
+    <button class="copy-btn" onclick="copyText('constantCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
+
+<!-- Dot.Upper.Case -->
+<div class="conversion-card">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="card-icon" style="background: #2196f3;">
+                <i class="fas fa-circle"></i>
+            </div>
+            Dot.Upper.Case
+        </div>
+    </div>
+    <div class="output-text" id="dotUpperCase"></div>
+    <button class="copy-btn" onclick="copyText('dotUpperCase')">
+        <i class="fas fa-copy"></i> Copy
+    </button>
+</div>
             </div>
 
             <button class="clear-btn" onclick="clearAll()">
@@ -640,6 +784,50 @@
             // dot.case
             const dotCase = text.toLowerCase().replace(/\s+/g, '.').replace(/[^\w.]/g, '');
             updateOutput('dotCase', dotCase);
+
+            // SpongeBob Case
+const spongebobCase = text.split('').map(c =>
+    Math.random() > 0.5 ? c.toUpperCase() : c.toLowerCase()
+).join('');
+updateOutput('spongebobCase', spongebobCase);
+
+// Reverse Case
+const reverseCase = text.split('').reverse().join('');
+updateOutput('reverseCase', reverseCase);
+
+// Double Underscore Case
+const doubleUnderscoreCase = text.toLowerCase().replace(/\s+/g, '__');
+updateOutput('doubleUnderscoreCase', doubleUnderscoreCase);
+
+// Space Case
+const spaceCase = text.split('').join(' ');
+updateOutput('spaceCase', spaceCase);
+
+// No Space Case
+const noSpaceCase = text.replace(/\s+/g, '').toLowerCase();
+updateOutput('noSpaceCase', noSpaceCase);
+
+// ZigZag Case (every 2-char alternates case)
+const zigzagCase = text.split('').map((char, i) => 
+    Math.floor(i / 2) % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
+).join('');
+updateOutput('zigzagCase', zigzagCase);
+
+// Emoji Case 🔥 between characters
+const emojiCase = text.split('').join('🔥');
+updateOutput('emojiCase', emojiCase);
+
+// CONSTANT_CASE
+const constantCase = text.toUpperCase().replace(/\s+/g, '_');
+updateOutput('constantCase', constantCase);
+
+// Dot.Upper.Case
+const dotUpperCase = text
+    .toLowerCase()
+    .split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('.');
+updateOutput('dotUpperCase', dotUpperCase);
         }
 
         function updateOutput(id, text) {
