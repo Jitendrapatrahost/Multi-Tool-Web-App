@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Slug Converter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .options-section {
+            background: linear-gradient(135deg, #f8f9ff, #e6f0ff);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e8ff;
+        }
+
+        .options-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .option-group {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0e8ff;
+            transition: all 0.3s ease;
+        }
+
+        .option-group:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .option-group h4 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input, .radio-group input {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .select-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+        }
+
+        .output-section {
+            background: linear-gradient(135deg, #f0fff4, #e6fffa);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #c6f6d5;
+            margin-bottom: 20px;
+        }
+
+        .output-title {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .output-field {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #c6f6d5;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            font-family: 'Courier New', monospace;
+            color: #2d3748;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #f6ad55;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #f6ad55;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #c53030;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .history-section {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid #e17055;
+        }
+
+        .history-title {
+            font-size: 1.2rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid #e17055;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(225, 112, 85, 0.2);
+        }
+
+        .history-text {
+            font-family: 'Courier New', monospace;
+            color: #2d3748;
+            flex: 1;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .history-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn {
+            background: #4facfe;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10ac84, #1dd1a1);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .actions {
+                justify-content: center;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-link"></i> Text to Slug Converter</h1>
+            <p>Transform your text into SEO-friendly URL slugs with advanced customization options</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="inputText"><i class="fas fa-edit"></i> Enter your text:</label>
+                    <textarea id="inputText" class="input-field" placeholder="Enter your text here... For example: 'Hello World! This is a Sample Text 123'"></textarea>
+                </div>
+            </div>
+
+            <div class="options-section">
+                <h3 class="options-title"><i class="fas fa-cogs"></i> Customization Options</h3>
+                <div class="options-grid">
+                    <div class="option-group">
+                        <h4><i class="fas fa-minus"></i> Separator</h4>
+                        <div class="radio-group">
+                            <input type="radio" id="dash" name="separator" value="-" checked>
+                            <label for="dash">Dash (-)</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio" id="underscore" name="separator" value="_">
+                            <label for="underscore">Underscore (_)</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio" id="dot" name="separator" value=".">
+                            <label for="dot">Dot (.)</label>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <h4><i class="fas fa-font"></i> Text Case</h4>
+                        <div class="select-group">
+                            <select id="textCase">
+                                <option value="lowercase">Lowercase</option>
+                                <option value="uppercase">UPPERCASE</option>
+                                <option value="preserve">Preserve Original</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <h4><i class="fas fa-check-square"></i> Advanced Options</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="removeNumbers" />
+                            <label for="removeNumbers">Remove Numbers</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="removeSpecialChars" checked />
+                            <label for="removeSpecialChars">Remove Special Characters</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="removeStopWords" />
+                            <label for="removeStopWords">Remove Stop Words</label>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <h4><i class="fas fa-ruler"></i> Length Options</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="limitLength" />
+                            <label for="limitLength">Limit Length</label>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label for="maxLength">Max Length:</label>
+                            <input type="range" id="maxLength" min="10" max="200" value="100" style="width: 100%; margin-top: 5px;" disabled>
+                            <span id="lengthValue">100</span> characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="statistics">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="charCount">0</div>
+                        <div class="stat-label">Characters</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="wordCount">0</div>
+                        <div class="stat-label">Words</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="slugLength">0</div>
+                        <div class="stat-label">Slug Length</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="processedCount">0</div>
+                        <div class="stat-label">Conversions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h3 class="output-title"><i class="fas fa-link"></i> Generated Slug</h3>
+                <textarea id="outputSlug" class="output-field" readonly placeholder="Your generated slug will appear here..."></textarea>
+                
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="convertToSlug()">
+                        <i class="fas fa-magic"></i> Generate Slug
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                    <button class="btn btn-success" onclick="clearAll()">
+                        <i class="fas fa-eraser"></i> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h3 class="history-title"><i class="fas fa-history"></i> Conversion History</h3>
+                <div id="historyList" class="history-list">
+                    <p style="text-align: center; color: #666; font-style: italic;">No conversions yet. Start converting text to see your history!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let conversionHistory = [];
+        let conversionCount = 0;
+
+        // Stop words to remove (common English words)
+        const stopWords = ['a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'will', 'with'];
+
+        // Real-time input handling
+        document.getElementById('inputText').addEventListener('input', function() {
+            updateStatistics();
+            if (this.value.trim()) {
+                convertToSlug();
+            } else {
+                document.getElementById('outputSlug').value = '';
+                document.getElementById('slugLength').textContent = '0';
+            }
+        });
+
+        // Length limit handling
+        document.getElementById('limitLength').addEventListener('change', function() {
+            document.getElementById('maxLength').disabled = !this.checked;
+            if (document.getElementById('inputText').value.trim()) {
+                convertToSlug();
+            }
+        });
+
+        document.getElementById('maxLength').addEventListener('input', function() {
+            document.getElementById('lengthValue').textContent = this.value;
+            if (document.getElementById('inputText').value.trim()) {
+                convertToSlug();
+            }
+        });
+
+        // Auto-convert on option changes
+        document.querySelectorAll('input[name="separator"], #textCase, #removeNumbers, #removeSpecialChars, #removeStopWords').forEach(element => {
+            element.addEventListener('change', function() {
+                if (document.getElementById('inputText').value.trim()) {
+                    convertToSlug();
+                }
+            });
+        });
+
+        function convertToSlug() {
+            const inputText = document.getElementById('inputText').value;
+            if (!inputText.trim()) {
+                showNotification('Please enter some text to convert!', 'error');
+                return;
+            }
+
+            let text = inputText.trim();
+            
+            // Get selected options
+            const separator = document.querySelector('input[name="separator"]:checked').value;
+            const textCase = document.getElementById('textCase').value;
+            const removeNumbers = document.getElementById('removeNumbers').checked;
+            const removeSpecialChars = document.getElementById('removeSpecialChars').checked;
+            const removeStopWords = document.getElementById('removeStopWords').checked;
+            const limitLength = document.getElementById('limitLength').checked;
+            const maxLength = parseInt(document.getElementById('maxLength').value);
+
+            // Remove numbers if option is selected
+            if (removeNumbers) {
+                text = text.replace(/\d+/g, '');
+            }
+
+            // Remove special characters if option is selected
+            if (removeSpecialChars) {
+                text = text.replace(/[^\w\s-]/g, '');
+            }
+
+            // Convert to array of words
+            let words = text.toLowerCase().split(/\s+/).filter(word => word.length > 0);
+
+            // Remove stop words if option is selected
+            if (removeStopWords) {
+                words = words.filter(word => !stopWords.includes(word));
+            }
+
+            // Join words with separator
+            let slug = words.join(separator);
+
+            // Apply text case
+            switch (textCase) {
+                case 'uppercase':
+                    slug = slug.toUpperCase();
+                    break;
+                case 'preserve':
+                    // Reconstruct with original case
+                    words = text.split(/\s+/).filter(word => word.length > 0);
+                    if (removeStopWords) {
+                        words = words.filter(word => !stopWords.includes(word.toLowerCase()));
+                    }
+                    slug = words.join(separator);
+                    break;
+                default:
+                    slug = slug.toLowerCase();
+            }
+
+            // Limit length if option is selected
+            if (limitLength && slug.length > maxLength) {
+                // Try to cut at word boundary
+                const truncated = slug.substring(0, maxLength);
+                const lastSeparator = truncated.lastIndexOf(separator);
+                if (lastSeparator > maxLength * 0.7) {
+                    slug = truncated.substring(0, lastSeparator);
+                } else {
+                    slug = truncated;
+                }
+            }
+
+            // Clean up multiple separators
+            const separatorRegex = new RegExp(`\\${separator}+`, 'g');
+            slug = slug.replace(separatorRegex, separator);
+            
+            // Remove leading/trailing separators
+            const leadTrailRegex = new RegExp(`^\\${separator}+|\\${separator}+$`, 'g');
+            slug = slug.replace(leadTrailRegex, '');
+
+            document.getElementById('outputSlug').value = slug;
+            updateStatistics();
+            
+            // Add to history
+            if (slug) {
+                addToHistory(inputText, slug);
+                conversionCount++;
+                document.getElementById('processedCount').textContent = conversionCount;
+            }
+        }
+
+        function updateStatistics() {
+            const inputText = document.getElementById('inputText').value;
+            const outputSlug = document.getElementById('outputSlug').value;
+            
+            document.getElementById('charCount').textContent = inputText.length;
+            document.getElementById('wordCount').textContent = inputText.trim() ? inputText.trim().split(/\s+/).length : 0;
+            document.getElementById('slugLength').textContent = outputSlug.length;
+        }
+
+        function addToHistory(originalText, slug) {
+            const historyItem = {
+                id: Date.now(),
+                original: originalText.substring(0, 50) + (originalText.length > 50 ? '...' : ''),
+                slug: slug,
+                timestamp: new Date().toLocaleTimeString()
+            };
+
+            conversionHistory.unshift(historyItem);
+            
+            // Limit history to 10 items
+            if (conversionHistory.length > 10) {
+                conversionHistory = conversionHistory.slice(0, 10);
+            }
+
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            if (conversionHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No conversions yet. Start converting text to see your history!</p>';
+                return;
+            }
+
+            historyList.innerHTML = conversionHistory.map(item => `
+                <div class="history-item">
+                    <div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 3px;">${item.timestamp}</div>
+                        <div class="history-text">${item.slug}</div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="history-btn copy-btn" onclick="copyHistoryItem('${item.slug}')" title="Copy slug">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="history-btn delete-btn" onclick="deleteHistoryItem(${item.id})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function copyHistoryItem(slug) {
+            navigator.clipboard.writeText(slug).then(() => {
+                showNotification('Slug copied from history!', 'success');
+            }).catch(() => {
+                showNotification('Failed to copy slug', 'error');
+            });
+        }
+
+        function deleteHistoryItem(id) {
+            conversionHistory = conversionHistory.filter(item => item.id !== id);
+            renderHistory();
+            showNotification('History item deleted', 'success');
+        }
+
+        function copyToClipboard() {
+            const outputSlug = document.getElementById('outputSlug').value;
+            if (!outputSlug) {
+                showNotification('No slug to copy! Generate a slug first.', 'error');
+                return;
+            }
+
+            navigator.clipboard.writeText(outputSlug).then(() => {
+                showNotification('Slug copied to clipboard!', 'success');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = outputSlug;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Slug copied to clipboard!', 'success');
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputSlug').value = '';
+            updateStatistics();
+            showNotification('All fields cleared!', 'success');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize statistics
+        updateStatistics();
+
+        // Add some sample history items for demonstration
+        setTimeout(() => {
+            // This is just for demonstration - you can remove this in production
+            if (conversionHistory.length === 0) {
+                addToHistory('Hello World! This is a Sample Text', 'hello-world-this-is-a-sample-text');
+                addToHistory('SEO Friendly URL Slugs', 'seo-friendly-url-slugs');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
