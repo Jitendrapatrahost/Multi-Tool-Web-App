@@ -790,14 +790,8 @@
         // Initialize statistics
         updateStatistics();
 
-        // Add some sample history items for demonstration
-        setTimeout(() => {
-            // This is just for demonstration - you can remove this in production
-            if (conversionHistory.length === 0) {
-                addToHistory('Hello World! This is a Sample Text', 'hello-world-this-is-a-sample-text');
-                addToHistory('SEO Friendly URL Slugs', 'seo-friendly-url-slugs');
-            }
-        }, 1000);
+        // Initialize with blank history
+        // Users will see history after they start using the Generate Slug button
     </script>
 </body>
 </html>
