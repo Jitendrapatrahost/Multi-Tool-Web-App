@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator - Complete Tool</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-age { border-left-color: #ff6b6b; }
+        .card-birthday { border-left-color: #4ecdc4; }
+        .card-zodiac { border-left-color: #45b7d1; }
+        .card-stats { border-left-color: #96ceb4; }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-age .card-icon { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .card-birthday .card-icon { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .card-zodiac .card-icon { background: linear-gradient(135deg, #45b7d1, #3742fa); }
+        .card-stats .card-icon { background: linear-gradient(135deg, #96ceb4, #ffecd2); }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .card-content {
+            line-height: 1.6;
+        }
+
+        .age-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .zodiac-info {
+            text-align: center;
+        }
+
+        .zodiac-symbol {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .zodiac-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #45b7d1;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .fun-facts {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .fun-facts h3 {
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .fact-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-birthday-cake"></i> Age Calculator</h1>
+            <p>Discover your exact age, zodiac sign, and fascinating life statistics</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <div class="form-group">
+                        <label for="birthDate"><i class="fas fa-calendar-alt"></i> Birth Date</label>
+                        <input type="date" id="birthDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentDate"><i class="fas fa-clock"></i> Current Date (Optional)</label>
+                        <input type="date" id="currentDate">
+                    </div>
+                </div>
+                <button class="calculate-btn" onclick="calculateAge()">
+                    <i class="fas fa-calculator"></i> Calculate My Age
+                </button>
+            </div>
+
+            <div id="results" class="hidden">
+                <div class="results-grid">
+                    <div class="result-card card-age">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="card-title">Your Age</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="age-display" id="ageDisplay"></div>
+                            <div id="exactAge"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-card card-birthday">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <div class="card-title">Next Birthday</div>
+                        </div>
+                        <div class="card-content" id="birthdayInfo">
+                        </div>
+                    </div>
+
+                    <div class="result-card card-zodiac">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="card-title">Zodiac Sign</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="zodiac-info" id="zodiacInfo">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-card card-stats">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="card-title">Life Statistics</div>
+                        </div>
+                        <div class="card-content" id="lifeStats">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fun-facts">
+                    <h3><i class="fas fa-lightbulb"></i> Fun Facts About Your Age</h3>
+                    <div id="funFacts"></div>
+                </div>
+            </div>
+
+            <div id="error" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date as default for current date
+        document.getElementById('currentDate').valueAsDate = new Date();
+
+        function calculateAge() {
+            const birthDateInput = document.getElementById('birthDate').value;
+            const currentDateInput = document.getElementById('currentDate').value;
+
+            if (!birthDateInput) {
+                showError('Please enter your birth date');
+                return;
+            }
+
+            const birthDate = new Date(birthDateInput);
+            const currentDate = currentDateInput ? new Date(currentDateInput) : new Date();
+
+            if (birthDate > currentDate) {
+                showError('Birth date cannot be in the future');
+                return;
+            }
+
+            hideError();
+            
+            const ageData = getDetailedAge(birthDate, currentDate);
+            displayResults(ageData, birthDate, currentDate);
+        }
+
+        function getDetailedAge(birthDate, currentDate) {
+            let years = currentDate.getFullYear() - birthDate.getFullYear();
+            let months = currentDate.getMonth() - birthDate.getMonth();
+            let days = currentDate.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const totalDays = Math.floor((currentDate - birthDate) / (1000 * 60 * 60 * 24));
+            const totalWeeks = Math.floor(totalDays / 7);
+            const totalMonths = years * 12 + months;
+            const totalHours = totalDays * 24;
+            const totalMinutes = totalHours * 60;
+
+            return {
+                years,
+                months,
+                days,
+                totalDays,
+                totalWeeks,
+                totalMonths,
+                totalHours,
+                totalMinutes
+            };
+        }
+
+        function getNextBirthday(birthDate, currentDate) {
+            const nextBirthday = new Date(currentDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            
+            if (nextBirthday < currentDate) {
+                nextBirthday.setFullYear(currentDate.getFullYear() + 1);
+            }
+
+            const daysUntil = Math.ceil((nextBirthday - currentDate) / (1000 * 60 * 60 * 24));
+            const dayOfWeek = nextBirthday.toLocaleDateString('en-US', { weekday: 'long' });
+
+            return {
+                date: nextBirthday.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                }),
+                daysUntil,
+                dayOfWeek
+            };
+        }
+
+        function getZodiacSign(birthDate) {
+            const month = birthDate.getMonth() + 1;
+            const day = birthDate.getDate();
+
+            const zodiacSigns = [
+                { name: 'Capricorn', symbol: '♑', start: [12, 22], end: [1, 19] },
+                { name: 'Aquarius', symbol: '♒', start: [1, 20], end: [2, 18] },
+                { name: 'Pisces', symbol: '♓', start: [2, 19], end: [3, 20] },
+                { name: 'Aries', symbol: '♈', start: [3, 21], end: [4, 19] },
+                { name: 'Taurus', symbol: '♉', start: [4, 20], end: [5, 20] },
+                { name: 'Gemini', symbol: '♊', start: [5, 21], end: [6, 20] },
+                { name: 'Cancer', symbol: '♋', start: [6, 21], end: [7, 22] },
+                { name: 'Leo', symbol: '♌', start: [7, 23], end: [8, 22] },
+                { name: 'Virgo', symbol: '♍', start: [8, 23], end: [9, 22] },
+                { name: 'Libra', symbol: '♎', start: [9, 23], end: [10, 22] },
+                { name: 'Scorpio', symbol: '♏', start: [10, 23], end: [11, 21] },
+                { name: 'Sagittarius', symbol: '♐', start: [11, 22], end: [12, 21] }
+            ];
+
+            for (let sign of zodiacSigns) {
+                if (sign.name === 'Capricorn') {
+                    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) {
+                        return sign;
+                    }
+                } else {
+                    const [startMonth, startDay] = sign.start;
+                    const [endMonth, endDay] = sign.end;
+                    
+                    if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay)) {
+                        return sign;
+                    }
+                }
+            }
+        }
+
+        function generateFunFacts(ageData, birthDate) {
+            const facts = [];
+            
+            facts.push(`You have lived for approximately ${ageData.totalHours.toLocaleString()} hours!`);
+            facts.push(`That's about ${ageData.totalMinutes.toLocaleString()} minutes of life experience.`);
+            facts.push(`You've experienced ${ageData.totalWeeks.toLocaleString()} weeks on this planet.`);
+            
+            const birthYear = birthDate.getFullYear();
+            const currentYear = new Date().getFullYear();
+            const decadesBorn = Math.floor(birthYear / 10) * 10;
+            facts.push(`You were born in the ${decadesBorn}s, ${currentYear - birthYear} years ago.`);
+            
+            if (ageData.years >= 18) {
+                facts.push(`You've been an adult for ${ageData.years - 18} years.`);
+            }
+            
+            const heartbeats = Math.floor(ageData.totalMinutes * 70); // Average 70 bpm
+            facts.push(`Your heart has beaten approximately ${heartbeats.toLocaleString()} times!`);
+            
+            return facts;
+        }
+
+        function displayResults(ageData, birthDate, currentDate) {
+            // Display main age
+            document.getElementById('ageDisplay').textContent = `${ageData.years} Years Old`;
+            document.getElementById('exactAge').innerHTML = `
+                <strong>Exact Age:</strong> ${ageData.years} years, ${ageData.months} months, and ${ageData.days} days
+            `;
+
+            // Display next birthday info
+            const nextBirthday = getNextBirthday(birthDate, currentDate);
+            document.getElementById('birthdayInfo').innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Next Birthday:</span>
+                    <span class="stat-value">${nextBirthday.date}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Days Until:</span>
+                    <span class="stat-value">${nextBirthday.daysUntil} days</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Day of Week:</span>
+                    <span class="stat-value">${nextBirthday.dayOfWeek}</span>
+                </div>
+            `;
+
+            // Display zodiac sign
+            const zodiac = getZodiacSign(birthDate);
+            document.getElementById('zodiacInfo').innerHTML = `
+                <span class="zodiac-symbol">${zodiac.symbol}</span>
+                <div class="zodiac-name">${zodiac.name}</div>
+                <p>Your zodiac sign based on your birth date</p>
+            `;
+
+            // Display life statistics
+            document.getElementById('lifeStats').innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Total Days:</span>
+                    <span class="stat-value">${ageData.totalDays.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Weeks:</span>
+                    <span class="stat-value">${ageData.totalWeeks.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Months:</span>
+                    <span class="stat-value">${ageData.totalMonths}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Hours:</span>
+                    <span class="stat-value">${ageData.totalHours.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Minutes:</span>
+                    <span class="stat-value">${ageData.totalMinutes.toLocaleString()}</span>
+                </div>
+            `;
+
+            // Display fun facts
+            const funFacts = generateFunFacts(ageData, birthDate);
+            const funFactsHtml = funFacts.map(fact => `<div class="fact-item">${fact}</div>`).join('');
+            document.getElementById('funFacts').innerHTML = funFactsHtml;
+
+            // Show results with animation
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('results').classList.add('pulse');
+            
+            setTimeout(() => {
+                document.getElementById('results').classList.remove('pulse');
+            }, 2000);
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('error');
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+            document.getElementById('results').classList.add('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('error').classList.add('hidden');
+        }
+
+        // Add enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateAge();
+            }
+        });
+    </script>
+</body>
+</html>
