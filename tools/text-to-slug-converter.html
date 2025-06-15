@@ -529,7 +529,7 @@
                 <textarea id="outputSlug" class="output-field" readonly placeholder="Your generated slug will appear here..."></textarea>
                 
                 <div class="actions">
-                    <button class="btn btn-primary" onclick="convertToSlug()">
+                    <button class="btn btn-primary" onclick="convertToSlug(true)">
                         <i class="fas fa-magic"></i> Generate Slug
                     </button>
                     <button class="btn btn-secondary" onclick="copyToClipboard()">
@@ -563,7 +563,7 @@
         document.getElementById('inputText').addEventListener('input', function() {
             updateStatistics();
             if (this.value.trim()) {
-                convertToSlug();
+                convertToSlug(false); // Don't save to history on real-time conversion
             } else {
                 document.getElementById('outputSlug').value = '';
                 document.getElementById('slugLength').textContent = '0';
@@ -574,14 +574,14 @@
         document.getElementById('limitLength').addEventListener('change', function() {
             document.getElementById('maxLength').disabled = !this.checked;
             if (document.getElementById('inputText').value.trim()) {
-                convertToSlug();
+                convertToSlug(false); // Don't save to history on option change
             }
         });
 
         document.getElementById('maxLength').addEventListener('input', function() {
             document.getElementById('lengthValue').textContent = this.value;
             if (document.getElementById('inputText').value.trim()) {
-                convertToSlug();
+                convertToSlug(false); // Don't save to history on option change
             }
         });
 
@@ -589,12 +589,12 @@
         document.querySelectorAll('input[name="separator"], #textCase, #removeNumbers, #removeSpecialChars, #removeStopWords').forEach(element => {
             element.addEventListener('change', function() {
                 if (document.getElementById('inputText').value.trim()) {
-                    convertToSlug();
+                    convertToSlug(false); // Don't save to history on option change
                 }
             });
         });
 
-        function convertToSlug() {
+        function convertToSlug(saveToHistory = true) {
             const inputText = document.getElementById('inputText').value;
             if (!inputText.trim()) {
                 showNotification('Please enter some text to convert!', 'error');
@@ -673,8 +673,8 @@
             document.getElementById('outputSlug').value = slug;
             updateStatistics();
             
-            // Add to history
-            if (slug) {
+            // Add to history only when explicitly requested (button click)
+            if (saveToHistory && slug) {
                 addToHistory(inputText, slug);
                 conversionCount++;
                 document.getElementById('processedCount').textContent = conversionCount;
