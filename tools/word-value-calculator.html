@@ -297,33 +297,444 @@
       transform: translateY(-2px);
     }
 
-    @media (max-width: 600px) {
+    /* Desktop-first responsive design */
+    @media (min-width: 1200px) {
       .container {
-        padding: 25px;
-        margin: 10px;
+        max-width: 800px;
+        padding: 50px;
       }
 
       h1 {
-        font-size: 1.8em;
+        font-size: 2.8em;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      input {
+        font-size: 20px;
+        padding: 22px 25px;
+      }
+
+      button {
+        padding: 18px 35px;
+        font-size: 18px;
+        min-width: 160px;
+      }
+
+      #result {
+        font-size: 20px;
+        padding: 30px;
+      }
+
+      .letter-value {
+        padding: 12px 16px;
+        font-size: 16px;
+      }
+    }
+
+    /* Tablet landscape */
+    @media (min-width: 768px) and (max-width: 1199px) {
+      .container {
+        max-width: 700px;
+        padding: 40px;
+      }
+
+      .button-group {
+        gap: 20px;
+      }
+
+      button {
+        min-width: 150px;
+      }
+
+      .letter-breakdown {
+        gap: 10px;
+      }
+
+      .example-words {
+        gap: 12px;
+      }
+    }
+
+    /* Tablet portrait and small laptops */
+    @media (min-width: 600px) and (max-width: 767px) {
+      .container {
+        max-width: 600px;
+        padding: 35px;
+      }
+
+      h1 {
+        font-size: 2.0em;
+      }
+
+      .button-group {
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      button {
+        flex: 1;
+        max-width: 200px;
+      }
+
+      .letter-breakdown {
+        gap: 8px;
+      }
+
+      .letter-value {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+    }
+
+    /* Mobile landscape */
+    @media (min-width: 480px) and (max-width: 599px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 25px;
+        border-radius: 20px;
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 1.9em;
+        margin-bottom: 12px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+      }
+
+      input {
+        padding: 16px 18px;
+        font-size: 17px;
+      }
+
+      .button-group {
+        flex-direction: row;
+        gap: 12px;
+      }
+
+      button {
+        flex: 1;
+        padding: 14px 20px;
+        font-size: 15px;
+        min-width: auto;
+      }
+
+      #result {
+        font-size: 16px;
+        padding: 20px;
+        min-height: 70px;
+      }
+
+      .letter-breakdown {
+        gap: 6px;
+      }
+
+      .letter-value {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+
+      .example-words {
+        gap: 8px;
+      }
+
+      .example-word {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+
+      .breakdown {
+        padding: 18px;
+        font-size: 13px;
+      }
+    }
+
+    /* Mobile portrait */
+    @media (max-width: 479px) {
+      body {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+
+      .container {
+        padding: 20px;
+        margin: 0;
+        width: 100%;
+        border-radius: 15px;
+        min-height: auto;
+      }
+
+      h1 {
+        font-size: 1.6em;
+        margin-bottom: 10px;
+        line-height: 1.2;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        margin-bottom: 25px;
+        line-height: 1.4;
+      }
+
+      input {
+        padding: 15px 18px;
+        font-size: 16px;
+        border-radius: 12px;
+      }
+
+      .input-icon {
+        right: 12px;
+        font-size: 18px;
       }
 
       .button-group {
         flex-direction: column;
-        align-items: center;
+        gap: 12px;
+        align-items: stretch;
       }
 
       button {
         width: 100%;
-        max-width: 300px;
+        padding: 16px 25px;
+        font-size: 16px;
+        border-radius: 12px;
+        min-width: auto;
+      }
+
+      #result {
+        font-size: 16px;
+        padding: 18px;
+        min-height: 60px;
+        border-radius: 15px;
+        margin-top: 25px;
+      }
+
+      .breakdown {
+        padding: 15px;
+        font-size: 12px;
+        border-radius: 12px;
+        margin-top: 15px;
       }
 
       .letter-breakdown {
-        gap: 5px;
+        gap: 4px;
+        margin-top: 12px;
       }
 
       .letter-value {
         padding: 6px 10px;
         font-size: 12px;
+        border-radius: 8px;
+      }
+
+      .progress-bar {
+        height: 6px;
+        margin: 15px 0;
+      }
+
+      .examples {
+        padding: 15px;
+        margin-top: 25px;
+        border-radius: 12px;
+        font-size: 14px;
+      }
+
+      .example-words {
+        gap: 6px;
+        margin-top: 12px;
+      }
+
+      .example-word {
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 15px;
+      }
+
+      /* Optimize particles for mobile */
+      .particle {
+        width: 3px !important;
+        height: 3px !important;
+      }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 320px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.4em;
+      }
+
+      .subtitle {
+        font-size: 13px;
+      }
+
+      input {
+        padding: 12px 15px;
+        font-size: 15px;
+      }
+
+      button {
+        padding: 14px 20px;
+        font-size: 15px;
+      }
+
+      #result {
+        font-size: 15px;
+        padding: 15px;
+      }
+
+      .letter-value {
+        padding: 5px 8px;
+        font-size: 11px;
+      }
+
+      .example-word {
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+    }
+
+    /* Landscape orientation adjustments */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body {
+        padding: 10px;
+        align-items: center;
+      }
+
+      .container {
+        padding: 20px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        margin-bottom: 15px;
+      }
+
+      .examples {
+        margin-top: 15px;
+      }
+
+      #result {
+        margin-top: 15px;
+        min-height: 50px;
+      }
+
+      .breakdown {
+        margin-top: 10px;
+      }
+    }
+
+    /* High DPI displays */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .container {
+        border: 0.5px solid rgba(255, 255, 255, 0.1);
+      }
+
+      input {
+        border-width: 1.5px;
+      }
+
+      .letter-value {
+        border-width: 1px;
+      }
+    }
+
+    /* Touch device optimizations */
+    @media (hover: none) and (pointer: coarse) {
+      button {
+        padding: 18px 25px;
+        min-height: 48px;
+      }
+
+      .example-word {
+        padding: 10px 15px;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .letter-value {
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      input {
+        min-height: 50px;
+      }
+    }
+
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .particle {
+        display: none;
+      }
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: linear-gradient(135deg, #2d3561 0%, #1e293b 100%);
+      }
+
+      .container {
+        background: rgba(30, 41, 59, 0.95);
+        color: #e2e8f0;
+      }
+
+      input {
+        background: #334155;
+        border-color: #475569;
+        color: #e2e8f0;
+      }
+
+      input:focus {
+        background: #1e293b;
+        border-color: #667eea;
+      }
+
+      .examples {
+        background: rgba(51, 65, 85, 0.5);
+        border-color: #667eea;
+      }
+
+      .example-word {
+        background: #334155;
+        color: #e2e8f0;
+        border-color: #475569;
+      }
+
+      .letter-value {
+        background: #334155;
+        color: #667eea;
+        border-color: #475569;
       }
     }
   </style>
@@ -365,19 +776,36 @@
   </div>
 
   <script>
-    // Create floating particles
+    // Create floating particles (responsive count)
     function createParticles() {
       const particlesContainer = document.getElementById('particles');
-      for (let i = 0; i < 20; i++) {
+      const isMobile = window.innerWidth <= 768;
+      const particleCount = isMobile ? 10 : 20;
+      
+      for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         particle.style.left = Math.random() * 100 + '%';
         particle.style.top = Math.random() * 100 + '%';
-        particle.style.width = Math.random() * 6 + 4 + 'px';
-        particle.style.height = particle.style.width;
+        const size = isMobile ? Math.random() * 3 + 2 : Math.random() * 6 + 4;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
         particle.style.animationDelay = Math.random() * 6 + 's';
         particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
         particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Handle responsive particle updates on resize
+    function handleResize() {
+      const particlesContainer = document.getElementById('particles');
+      const currentParticles = particlesContainer.children.length;
+      const isMobile = window.innerWidth <= 768;
+      const targetCount = isMobile ? 10 : 20;
+      
+      if (currentParticles !== targetCount) {
+        particlesContainer.innerHTML = '';
+        createParticles();
       }
     }
 
@@ -503,10 +931,36 @@
       }
     });
 
-    // Auto-focus input on load
+    // Auto-focus input on load and handle responsive setup
     document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("wordInput").focus();
+      // Only auto-focus on desktop to avoid mobile keyboard pop-up
+      if (window.innerWidth > 768) {
+        document.getElementById("wordInput").focus();
+      }
       createParticles();
+    });
+
+    // Handle window resize for responsive particles
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, 250);
+    });
+
+    // Prevent zoom on iOS when focusing input
+    document.getElementById("wordInput").addEventListener('focus', function(e) {
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        e.target.style.fontSize = '16px';
+      }
+    });
+
+    // Restore font size after blur on iOS
+    document.getElementById("wordInput").addEventListener('blur', function(e) {
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        setTimeout(() => {
+          e.target.style.fontSize = '';
+        }, 100);
+      }
     });
 
     // Real-time validation feedback
