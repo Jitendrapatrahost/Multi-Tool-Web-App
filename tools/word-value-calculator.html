@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Word Value Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    .bg-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      max-width: 600px;
+      width: 95%;
+      position: relative;
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #2d3436;
+      margin-bottom: 15px;
+      font-size: 2.2em;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #636e72;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 18px;
+      border: 3px solid #e9ecef;
+      border-radius: 15px;
+      outline: none;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    input:focus {
+      border-color: #667eea;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: #667eea;
+      pointer-events: none;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      min-width: 140px;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    .clear-btn {
+      background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+    }
+
+    .clear-btn:hover {
+      box-shadow: 0 10px 25px rgba(253, 121, 168, 0.3);
+    }
+
+    #result {
+      margin-top: 30px;
+      padding: 25px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3436;
+      background: #f8f9fa;
+      border-radius: 20px;
+      border: 3px solid transparent;
+      transition: all 0.5s ease;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    #result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-perfect {
+      background: linear-gradient(135deg, #00b894, #00cec9);
+      color: white;
+      border-color: #00b894;
+      animation: perfectPulse 2s ease-in-out infinite;
+    }
+
+    .result-high {
+      background: linear-gradient(135deg, #0984e3, #74b9ff);
+      color: white;
+      border-color: #0984e3;
+    }
+
+    .result-good {
+      background: linear-gradient(135deg, #fdcb6e, #e17055);
+      color: white;
+      border-color: #fdcb6e;
+    }
+
+    .result-low {
+      background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+      color: white;
+      border-color: #fd79a8;
+    }
+
+    @keyframes perfectPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .breakdown {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 15px;
+      font-size: 14px;
+      color: #636e72;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease 0.2s;
+    }
+
+    .breakdown.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .letter-breakdown {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .letter-value {
+      background: white;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      color: #667eea;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .letter-value:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e9ecef;
+      border-radius: 4px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 4px;
+      transition: width 1s ease;
+      width: 0%;
+    }
+
+    .examples {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 15px;
+      border: 2px dashed #667eea;
+    }
+
+    .example-words {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .example-word {
+      background: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #e9ecef;
+      font-weight: 500;
+    }
+
+    .example-word:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+        margin: 10px;
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      button {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .letter-breakdown {
+        gap: 5px;
+      }
+
+      .letter-value {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-particles" id="particles"></div>
+  
+  <div class="container">
+    <h1>🔡 Word Value Calculator</h1>
+    <p class="subtitle">
+      Discover the numerical power of words! Each letter has a value from A=1 to Z=26.<br>
+      <strong>Try "ATTITUDE" - it equals exactly 100!</strong>
+    </p>
+
+    <div class="input-group">
+      <input type="text" id="wordInput" placeholder="Enter any word (e.g., LOVE, SUCCESS, DREAM)" autocomplete="off" />
+      <div class="input-icon">✨</div>
+    </div>
+
+    <div class="button-group">
+      <button onclick="calculateValue()">🚀 Calculate Value</button>
+      <button class="clear-btn" onclick="clearAll()">🗑️ Clear</button>
+    </div>
+
+    <div id="result"></div>
+    <div id="breakdown" class="breakdown"></div>
+
+    <div class="examples">
+      <strong>💡 Try these examples:</strong>
+      <div class="example-words">
+        <span class="example-word" onclick="tryExample('ATTITUDE')">ATTITUDE</span>
+        <span class="example-word" onclick="tryExample('LOVE')">LOVE</span>
+        <span class="example-word" onclick="tryExample('SUCCESS')">SUCCESS</span>
+        <span class="example-word" onclick="tryExample('DREAM')">DREAM</span>
+        <span class="example-word" onclick="tryExample('HAPPINESS')">HAPPINESS</span>
+        <span class="example-word" onclick="tryExample('PEACE')">PEACE</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Create floating particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.width = Math.random() * 6 + 4 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    function calculateValue() {
+      const word = document.getElementById("wordInput").value.toUpperCase().trim();
+      
+      if (!word) {
+        showResult("⚠️ Please enter a word to calculate its value!", "", "");
+        return;
+      }
+
+      let total = 0;
+      let letterBreakdown = [];
+      let validLetters = 0;
+
+      for (let i = 0; i < word.length; i++) {
+        const char = word[i];
+        const charCode = char.charCodeAt(0);
+        
+        if (charCode >= 65 && charCode <= 90) {
+          const value = charCode - 64;
+          total += value;
+          letterBreakdown.push({ letter: char, value: value });
+          validLetters++;
+        }
+      }
+
+      if (validLetters === 0) {
+        showResult("⚠️ Please enter a valid word with alphabetical characters only.", "", "");
+        return;
+      }
+
+      let message = `The word "<span style="color:#667eea; font-weight:700;">${word}</span>" has a total value of <span style="color:#00b894; font-size:1.3em; font-weight:700;">${total}</span>`;
+      let resultClass = "";
+      let emoji = "";
+
+      if (total === 100) {
+        message += "<br>🎯 <strong>PERFECT SCORE!</strong> Your ATTITUDE is everything!";
+        resultClass = "result-perfect";
+        emoji = "🎯";
+      } else if (total > 100) {
+        message += "<br>🚀 <strong>AMAZING!</strong> This is a high-energy word!";
+        resultClass = "result-high";
+        emoji = "🚀";
+      } else if (total >= 80) {
+        message += "<br>💪 <strong>EXCELLENT!</strong> Great potential and strength!";
+        resultClass = "result-good";
+        emoji = "💪";
+      } else if (total >= 60) {
+        message += "<br>👍 <strong>GOOD VALUE!</strong> Solid foundation to build upon!";
+        resultClass = "result-good";
+        emoji = "👍";
+      } else if (total >= 40) {
+        message += "<br>🌱 <strong>GROWING!</strong> Room for improvement and growth!";
+        resultClass = "result-low";
+        emoji = "🌱";
+      } else {
+        message += "<br>📈 <strong>POTENTIAL!</strong> Choose more powerful words!";
+        resultClass = "result-low";
+        emoji = "📈";
+      }
+
+      // Create breakdown display
+      const breakdownHtml = `
+        <div><strong>Letter Breakdown:</strong></div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${Math.min(total, 150) / 150 * 100}%"></div>
+        </div>
+        <div class="letter-breakdown">
+          ${letterBreakdown.map(item => 
+            `<span class="letter-value" title="${item.letter} = ${item.value}">${item.letter}<small> = ${item.value}</small></span>`
+          ).join('')}
+        </div>
+        <div style="margin-top: 15px;">
+          <strong>Total Letters:</strong> ${validLetters} | 
+          <strong>Average Value:</strong> ${(total / validLetters).toFixed(1)}
+        </div>
+      `;
+
+      showResult(message, resultClass, breakdownHtml);
+    }
+
+    function showResult(message, className, breakdown) {
+      const resultDiv = document.getElementById("result");
+      const breakdownDiv = document.getElementById("breakdown");
+      
+      // Reset animations
+      resultDiv.className = "";
+      breakdownDiv.className = "breakdown";
+      
+      setTimeout(() => {
+        resultDiv.innerHTML = message;
+        resultDiv.className = `show ${className}`;
+        
+        if (breakdown) {
+          breakdownDiv.innerHTML = breakdown;
+          breakdownDiv.className = "breakdown show";
+        } else {
+          breakdownDiv.innerHTML = "";
+        }
+      }, 100);
+    }
+
+    function clearAll() {
+      document.getElementById("wordInput").value = "";
+      document.getElementById("result").className = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("breakdown").className = "breakdown";
+      document.getElementById("breakdown").innerHTML = "";
+      document.getElementById("wordInput").focus();
+    }
+
+    function tryExample(word) {
+      document.getElementById("wordInput").value = word;
+      calculateValue();
+    }
+
+    // Enable Enter key to trigger calculation
+    document.getElementById("wordInput").addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        calculateValue();
+      }
+    });
+
+    // Auto-focus input on load
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("wordInput").focus();
+      createParticles();
+    });
+
+    // Real-time validation feedback
+    document.getElementById("wordInput").addEventListener("input", function(e) {
+      const value = e.target.value;
+      const hasInvalidChars = /[^a-zA-Z\s]/.test(value);
+      
+      if (hasInvalidChars) {
+        e.target.style.borderColor = '#ff6b6b';
+        e.target.style.background = '#fff5f5';
+      } else {
+        e.target.style.borderColor = value ? '#667eea' : '#e9ecef';
+        e.target.style.background = value ? '#fff' : '#f8f9fa';
+      }
+    });
+  </script>
+</body>
+</html>
