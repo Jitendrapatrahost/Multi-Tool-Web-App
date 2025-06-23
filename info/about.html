@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About | All Web Tools</title>
+  <link rel="stylesheet" href="about.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+      * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #0e1a2b;
+  color: #f0f4f8;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 50px 20px 40px;
+}
+
+h1, h2, h3 {
+  color: #00f7ff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h1 span {
+  color: #00f7ff;
+}
+
+.about, .author {
+  margin-bottom: 60px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 247, 255, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.about:hover, .author:hover {
+  transform: translateY(-5px);
+}
+
+.features {
+  list-style: none;
+  margin: 20px 0;
+  padding-left: 0;
+}
+
+.features li {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.author-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.author-info {
+  max-width: 700px;
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #00f7ff;
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.1);
+}
+
+.author-info h3 {
+  color: #00f7ff;
+  margin-bottom: 10px;
+}
+
+a {
+  color: #00f7ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+  background-color: #06101c;
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-content {
+  color: #ccc;
+  font-size: 14px;
+}
+
+.footer-content a {
+  color: #00f7ff;
+  margin: 0 10px;
+}
+
+/* Animations */
+.animated {
+  opacity: 0;
+  transform: translateY(20px);
+  animation-fill-mode: forwards;
+}
+
+.fade-in {
+  animation: fadeIn 1.2s forwards ease-in;
+}
+
+.slide-up {
+  animation: slideUp 1.5s forwards ease-in;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .author-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="about animated fade-in">
+      <h1>🚀 <span>All Web Tools</span></h1>
+      <p>
+        <strong>All Web Tools</strong> is your all-in-one collection of smart, free-to-use online utilities. Designed for developers, students, and creators, it helps simplify everyday tasks with blazing-fast, easy-to-access tools — all in one place.
+      </p>
+
+      <h3>✨ Featured Tools Include:</h3>
+      <ul class="features">
+        <li>✔️ Currency Converter, Unit Converter, Password Generator</li>
+        <li>✔️ Image Compressor, Resizer, Enlarger, Format Changer</li>
+        <li>✔️ QR Code Generator, URL Shortener, Stopwatch</li>
+        <li>✔️ Minifiers for HTML, CSS, JavaScript, and more...</li>
+      </ul>
+      <p>
+        With new tools added regularly, All Web Tools aims to empower users with quick solutions, no installs, no ads, just productivity.
+      </p>
+    </section>
+
+    <section class="author animated slide-up">
+      <h2>👨‍💻 About the Creator</h2>
+      <div class="author-card">
+        <div class="author-info">
+          <h3>Jitendra Patra</h3>
+          <p>
+            My name is Jitendra, a B.Tech student specializing in Computer Science with a strong passion for creating innovative digital solutions. This platform was founded with a clear vision — to provide fast, ad-free tools designed to solve real-world problems efficiently and effectively.          </p>
+          <p>
+            I am continuously working to enhance this site by adding new features, refining the user experience, and maintaining a commitment to keeping all tools open and freely accessible to everyone.
+          </p>
+          <p>
+            Contact: <a href="mailto:jitendrapatra.code@gmail.com">jitendrapatra.code@gmail.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p><strong>All Web Tools</strong> © 2025 | Built by Jitendra Patra</p>
+      <p>
+        <a href="/">Home</a> |
+        <a href="/explore/all-tools">Explore Tools</a> |
+        <a href="/about.html">About</a> |
+        <a href="/contact.html">Contact</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
