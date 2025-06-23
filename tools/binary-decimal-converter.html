@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decimal to Binary Converter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .converter-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        input {
+            min-height: 50px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(250, 112, 154, 0.4);
+        }
+
+        .btn-copy {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            color: #333;
+            min-width: 120px;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(168, 237, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            color: #333;
+            min-width: 120px;
+        }
+
+        .btn-cclear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 154, 158, 0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4facfe;
+            display: block;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .features {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .features h3 {
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .feature-item {
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .feature-item i {
+            color: #4facfe;
+            width: 20px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .binary-output {
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .realtime-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: 8px;
+            gap: 8px;
+        }
+
+        .realtime-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .realtime-indicator.active {
+            background: #4facfe;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.6; 
+                transform: scale(1.2);
+            }
+        }
+
+        .conversion-mode {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-switch {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-option {
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .mode-option.active {
+            color: white;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .mode-option:hover:not(.active) {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .conversion-arrow {
+            font-size: 1.5rem;
+            color: #4facfe;
+            transition: all 0.3s ease;
+            animation: pulse-arrow 2s infinite;
+        }
+
+        @keyframes pulse-arrow {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .section-badge {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .output-badge {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+        }
+
+        .conversion-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .info-icon {
+            color: #4facfe;
+            font-size: 1.1rem;
+        }
+
+        .info-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        .conversion-steps {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .steps-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .steps-content {
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calculator"></i> Decimal ↔ Binary Converter</h1>
+            <p>Convert decimal numbers to binary and binary to decimal instantly</p>
+        </div>
+
+        <div class="conversion-mode">
+            <div class="mode-switch">
+                <button class="mode-option active" id="decimalToBinaryMode" onclick="switchMode('decimalToBinary')">
+                    <i class="fas fa-sort-numeric-up"></i>
+                    <span>Decimal → Binary</span>
+                </button>
+                <button class="mode-option" id="binaryToDecimalMode" onclick="switchMode('binaryToDecimal')">
+                    <i class="fas fa-code"></i>
+                    <span>Binary → Decimal</span>
+                </button>
+            </div>
+            <div class="conversion-arrow">
+                <i class="fas fa-arrow-right" id="conversionArrow"></i>
+            </div>
+        </div>
+
+        <div class="realtime-toggle">
+            <div class="toggle-label">
+                <i class="fas fa-bolt"></i>
+                <span>Real-time Conversion</span>
+            </div>
+            <div class="toggle-switch" id="realtimeToggle" onclick="toggleRealtime()">
+                <div class="toggle-slider"></div>
+            </div>
+            <div class="realtime-indicator" id="realtimeIndicator"></div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <div class="section-title" id="inputSectionTitle">
+                    <i class="fas fa-sort-numeric-up" id="inputSectionIcon"></i>
+                    <span id="inputSectionText">Decimal Input</span>
+                </div>
+                <div class="section-badge" id="inputBadge">INPUT</div>
+            </div>
+            <div class="conversion-info" id="conversionInfo">
+                <i class="fas fa-info-circle info-icon"></i>
+                <span class="info-text" id="infoText">Enter a decimal number and click convert, or enable real-time mode</span>
+            </div>
+            <div class="input-group">
+                <input type="text" id="mainInput" placeholder="Enter decimal number (e.g., 42)...">
+            </div>
+            <div class="button-group" id="inputButtons">
+                <button class="btn btn-primary" id="convertButton" onclick="performConversion()">
+                    <i class="fas fa-arrow-down" id="convertIcon"></i>
+                    <span id="convertText">Convert to Binary</span>
+                </button>
+                <button class="btn btn-copy" onclick="copyText('mainInput')">
+                    <i class="fas fa-copy"></i>
+                    Copy Input
+                </button>
+                <button class="btn btn-clear" onclick="clearText()">
+                    <i class="fas fa-trash"></i>
+                    Clear All
+                </button>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <div class="section-title" id="outputSectionTitle">
+                    <i class="fas fa-code" id="outputSectionIcon"></i>
+                    <span id="outputSectionText">Binary Output</span>
+                </div>
+                <div class="section-badge output-badge" id="outputBadge">OUTPUT</div>
+            </div>
+            <div class="input-group">
+                <textarea id="mainOutput" class="binary-output" placeholder="Binary output will appear here..." readonly></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-copy" onclick="copyText('mainOutput')">
+                    <i class="fas fa-copy"></i>
+                    Copy Output
+                </button>
+            </div>
+            <div class="conversion-steps" id="conversionSteps" style="display: none;">
+                <div class="steps-title">
+                    <i class="fas fa-list-ol"></i>
+                    <span>Conversion Steps:</span>
+                </div>
+                <div class="steps-content" id="stepsContent"></div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-value" id="decimalValue">0</span>
+                <div class="stat-label">Decimal Value</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="binaryLength">0</span>
+                <div class="stat-label">Binary Digits</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="bitCount">0</span>
+                <div class="stat-label">Bits Required</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="hexValue">0</span>
+                <div class="stat-label">Hex Value</div>
+            </div>
+        </div>
+
+        <div class="features">
+            <h3><i class="fas fa-star"></i> Features</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>Real-time Conversion</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Bidirectional Conversion</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>Step-by-Step Process</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-copy"></i>
+                    <span>One-Click Copy</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Real-time Statistics</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-palette"></i>
+                    <span>Modern UI Design</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-calculator"></i>
+                    <span>Hex Value Display</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Copied to clipboard!</span>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const mainInput = document.getElementById('mainInput');
+        const mainOutput = document.getElementById('mainOutput');
+        const decimalValue = document.getElementById('decimalValue');
+        const binaryLength = document.getElementById('binaryLength');
+        const bitCount = document.getElementById('bitCount');
+        const hexValue = document.getElementById('hexValue');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const realtimeToggle = document.getElementById('realtimeToggle');
+        const realtimeIndicator = document.getElementById('realtimeIndicator');
+
+        // Mode switching elements
+        const decimalToBinaryMode = document.getElementById('decimalToBinaryMode');
+        const binaryToDecimalMode = document.getElementById('binaryToDecimalMode');
+        const conversionArrow = document.getElementById('conversionArrow');
+        const inputSectionTitle = document.getElementById('inputSectionTitle');
+        const outputSectionTitle = document.getElementById('outputSectionTitle');
+        const inputSectionIcon = document.getElementById('inputSectionIcon');
+        const outputSectionIcon = document.getElementById('outputSectionIcon');
+        const inputSectionText = document.getElementById('inputSectionText');
+        const outputSectionText = document.getElementById('outputSectionText');
+        const inputBadge = document.getElementById('inputBadge');
+        const outputBadge = document.getElementById('outputBadge');
+        const convertButton = document.getElementById('convertButton');
+        const convertIcon = document.getElementById('convertIcon');
+        const convertText = document.getElementById('convertText');
+        const conversionInfo = document.getElementById('conversionInfo');
+        const infoText = document.getElementById('infoText');
+        const conversionSteps = document.getElementById('conversionSteps');
+        const stepsContent = document.getElementById('stepsContent');
+
+        // Conversion mode state
+        let currentMode = 'decimalToBinary'; // 'decimalToBinary' or 'binaryToDecimal'
+
+        // Real-time conversion state
+        let isRealtimeEnabled = false;
+        let conversionTimeout;
+
+        // Add event listeners for real-time updates
+        mainInput.addEventListener('input', handleMainInput);
+
+        // Handle main input with real-time conversion
+        function handleMainInput() {
+            updateStats();
+            
+            if (isRealtimeEnabled) {
+                clearTimeout(conversionTimeout);
+                conversionTimeout = setTimeout(() => {
+                    performConversionRealtime();
+                }, 300); // Debounce for 300ms
+            }
+        }
+
+        // Switch conversion mode
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update mode buttons
+            decimalToBinaryMode.classList.toggle('active', mode === 'decimalToBinary');
+            binaryToDecimalMode.classList.toggle('active', mode === 'binaryToDecimal');
+            
+            if (mode === 'decimalToBinary') {
+                // Decimal to Binary Mode
+                inputSectionIcon.className = 'fas fa-sort-numeric-up';
+                inputSectionText.textContent = 'Decimal Input';
+                outputSectionIcon.className = 'fas fa-code';
+                outputSectionText.textContent = 'Binary Output';
+                convertIcon.className = 'fas fa-arrow-down';
+                convertText.textContent = 'Convert to Binary';
+                conversionArrow.innerHTML = '<i class="fas fa-arrow-right"></i>';
+                
+                mainInput.placeholder = 'Enter decimal number (e.g., 42)...';
+                mainOutput.placeholder = 'Binary output will appear here...';
+                mainInput.classList.remove('binary-output');
+                mainOutput.classList.add('binary-output');
+                mainInput.readOnly = false;
+                mainOutput.readOnly = true;
+                
+                infoText.textContent = 'Enter a decimal number and click convert, or enable real-time mode';
+                
+                showNotification('Switched to Decimal → Binary mode');
+            } else {
+                // Binary to Decimal Mode
+                inputSectionIcon.className = 'fas fa-code';
+                inputSectionText.textContent = 'Binary Input';
+                outputSectionIcon.className = 'fas fa-sort-numeric-up';
+                outputSectionText.textContent = 'Decimal Output';
+                convertIcon.className = 'fas fa-arrow-up';
+                convertText.textContent = 'Convert to Decimal';
+                conversionArrow.innerHTML = '<i class="fas fa-arrow-left"></i>';
+                
+                mainInput.placeholder = 'Enter binary number (e.g., 101010)...';
+                mainOutput.placeholder = 'Decimal output will appear here...';
+                mainInput.classList.add('binary-output');
+                mainOutput.classList.remove('binary-output');
+                mainInput.readOnly = false;
+                mainOutput.readOnly = true;
+                
+                infoText.textContent = 'Enter binary code (0s and 1s) and click convert, or enable real-time mode';
+                
+                showNotification('Switched to Binary → Decimal mode');
+            }
+            
+            // Clear inputs when switching modes
+            mainInput.value = '';
+            mainOutput.value = '';
+            conversionSteps.style.display = 'none';
+            updateStats();
+            
+            // Re-apply real-time conversion if enabled
+            if (isRealtimeEnabled && mainInput.value.trim()) {
+                performConversionRealtime();
+            }
+        }
+
+        // Perform conversion based on current mode
+        function performConversion() {
+            if (currentMode === 'decimalToBinary') {
+                convertToBinary();
+            } else {
+                convertToDecimal();
+            }
+        }
+
+        // Perform real-time conversion based on current mode
+        function performConversionRealtime() {
+            if (currentMode === 'decimalToBinary') {
+                convertToBinaryRealtime();
+            } else {
+                convertToDecimalRealtime();
+            }
+        }
+
+        // Toggle real-time conversion
+        function toggleRealtime() {
+            isRealtimeEnabled = !isRealtimeEnabled;
+            
+            if (isRealtimeEnabled) {
+                realtimeToggle.classList.add('active');
+                realtimeIndicator.classList.add('active');
+                showNotification('Real-time conversion enabled!');
+                
+                // Convert immediately if there's existing input
+                if (mainInput.value.trim()) {
+                    performConversionRealtime();
+                }
+            } else {
+                realtimeToggle.classList.remove('active');
+                realtimeIndicator.classList.remove('active');
+                clearTimeout(conversionTimeout);
+                showNotification('Real-time conversion disabled!');
+            }
+        }
+
+        // Real-time binary conversion (silent)
+        function convertToBinaryRealtime() {
+            const decimal = mainInput.value.trim();
+            if (!decimal || isNaN(decimal) || decimal === '') {
+                mainOutput.value = '';
+                conversionSteps.style.display = 'none';
+                updateStats();
+                return;
+            }
+
+            const num = parseInt(decimal);
+            if (num < 0) {
+                return; // Don't convert negative numbers in real-time
+            }
+
+            const binary = num.toString(2);
+            mainOutput.value = binary;
+            updateStats();
+        }
+
+        // Real-time decimal conversion (silent)
+        function convertToDecimalRealtime() {
+            const binary = mainInput.value.trim().replace(/\s/g, '');
+            if (!binary) {
+                mainOutput.value = '';
+                conversionSteps.style.display = 'none';
+                updateStats();
+                return;
+            }
+
+            // Validate binary input (silent validation)
+            if (!/^[01]+$/.test(binary)) {
+                return; // Don't convert invalid binary in real-time
+            }
+
+            const decimal = parseInt(binary, 2);
+            mainOutput.value = decimal.toString();
+            updateStats();
+        }
+
+        // Convert decimal to binary with steps
+        function convertToBinary() {
+            const decimal = mainInput.value.trim();
+            if (!decimal || isNaN(decimal)) {
+                showNotification('Please enter a valid decimal number!', 'error');
+                return;
+            }
+
+            const num = parseInt(decimal);
+            if (num < 0) {
+                showNotification('Please enter a non-negative number!', 'error');
+                return;
+            }
+
+            // Add loading effect
+            mainOutput.classList.add('loading', 'pulse');
+            
+            setTimeout(() => {
+                const binary = num.toString(2);
+
+                // Update output
+                mainOutput.value = binary;
+
+                // Update stats
+                updateStats();
+
+                // Show steps
+                conversionSteps.style.display = 'block';
+                let steps = '';
+                let temp = num;
+                if (temp === 0) {
+                    steps = '0 ÷ 2 = 0 remainder 0\nBinary: 0';
+                } else {
+                    const remainders = [];
+                    while (temp > 0) {
+                        remainders.push(temp % 2);
+                        steps += `${temp} ÷ 2 = ${Math.floor(temp / 2)} remainder ${temp % 2}\n`;
+                        temp = Math.floor(temp / 2);
+                    }
+                    steps += `\nBinary: ${remainders.reverse().join('')}`;
+                }
+                stepsContent.textContent = steps;
+
+                // Remove loading effect
+                mainOutput.classList.remove('loading', 'pulse');
+
+                showNotification('Converted to binary!');
+            }, 200);
+        }
+
+        // Convert binary to decimal with steps
+        function convertToDecimal() {
+            const binary = mainInput.value.trim().replace(/\s/g, '');
+            if (!binary) {
+                showNotification('Please enter a binary number!', 'error');
+                return;
+            }
+            if (!/^[01]+$/.test(binary)) {
+                showNotification('Please enter only 0s and 1s!', 'error');
+                return;
+            }
+
+            // Add loading effect
+            mainOutput.classList.add('loading', 'pulse');
+
+            setTimeout(() => {
+                const decimal = parseInt(binary, 2);
+
+                // Update output
+                mainOutput.value = decimal;
+
+                // Update stats
+                updateStats();
+
+                // Show steps
+                conversionSteps.style.display = 'block';
+                let steps = '';
+                let sum = 0;
+                for (let i = 0; i < binary.length; i++) {
+                    const bit = binary[i];
+                    const power = binary.length - i - 1;
+                    const value = bit * Math.pow(2, power);
+                    sum += value;
+                    steps += `${bit} × 2^${power} = ${value}\n`;
+                }
+                steps += `\nSum: ${sum}`;
+                stepsContent.textContent = steps;
+
+                // Remove loading effect
+                mainOutput.classList.remove('loading', 'pulse');
+
+                showNotification('Converted to decimal!');
+            }, 200);
+        }
+
+        // Update statistics
+        function updateStats() {
+            if (currentMode === 'decimalToBinary') {
+                const decimal = mainInput.value.trim();
+                if (!decimal || isNaN(decimal)) {
+                    decimalValue.textContent = '0';
+                    binaryLength.textContent = '0';
+                    bitCount.textContent = '0';
+                    hexValue.textContent = '0';
+                    return;
+                }
+                const num = parseInt(decimal);
+                if (num < 0) {
+                    decimalValue.textContent = '0';
+                    binaryLength.textContent = '0';
+                    bitCount.textContent = '0';
+                    hexValue.textContent = '0';
+                    return;
+                }
+                const binary = num.toString(2);
+                decimalValue.textContent = num;
+                binaryLength.textContent = binary.length;
+                bitCount.textContent = Math.max(1, Math.ceil(Math.log2(num + 1)));
+                hexValue.textContent = num.toString(16).toUpperCase();
+            } else {
+                const binary = mainInput.value.trim().replace(/\s/g, '');
+                if (!binary || !/^[01]+$/.test(binary)) {
+                    decimalValue.textContent = '0';
+                    binaryLength.textContent = '0';
+                    bitCount.textContent = '0';
+                    hexValue.textContent = '0';
+                    return;
+                }
+                const decimal = parseInt(binary, 2);
+                decimalValue.textContent = decimal;
+                binaryLength.textContent = binary.length;
+                bitCount.textContent = binary.length;
+                hexValue.textContent = decimal.toString(16).toUpperCase();
+            }
+        }
+
+        // Copy text to clipboard
+        function copyText(id) {
+            const element = document.getElementById(id);
+            element.select();
+            document.execCommand('copy');
+            
+            // Update notification text
+            notificationText.textContent = (id === 'mainInput' ? 'Input copied!' : 'Output copied!');
+            showNotification();
+        }
+
+        // Clear all text
+        function clearText() {
+            mainInput.value = '';
+            mainOutput.value = '';
+            conversionSteps.style.display = 'none';
+            updateStats();
+            showNotification('Cleared all fields!');
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            if (message) notificationText.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
