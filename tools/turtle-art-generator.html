@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Turtle Art Generator - Advanced 🌈</title>
+  <script src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin: 20px 0;
+      font-size: 28px;
+      color: #3ddc97;
+    }
+    #controls {
+      background: #1e1e1e;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    select, input[type="number"], button {
+      padding: 8px 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+    button {
+      background-color: #3ddc97;
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background-color: #29b17c;
+    }
+    canvas {
+      border: 2px solid #333;
+      margin-top: 10px;
+    }
+    #desc {
+      margin: 10px;
+      font-size: 14px;
+      max-width: 600px;
+      text-align: center;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body onload="brython()">
+
+  <h1>🌈 Turtle Art Generator (Advanced)</h1>
+
+  <div id="controls">
+    <select id="patternSelect" onchange="updateDescription()">
+      <option value="spiral">Spiral Vortex</option>
+      <option value="flower">Flower Galaxy</option>
+      <option value="hexa">Hexa Flower</option>
+      <option value="infinity">Infinity Bloom</option>
+    </select>
+
+    <input type="number" id="speed" min="0" max="10" placeholder="Speed (0-10)" value="0">
+    <input type="number" id="pen" min="1" max="10" placeholder="Pen Size" value="2">
+
+    <label style="display:flex; align-items:center; gap:5px;">
+      <input type="checkbox" id="randomColor"> Random Colors
+    </label>
+
+    <button onclick="runPattern()">Draw</button>
+    <button onclick="saveCanvas()">Save as PNG</button>
+  </div>
+
+  <div id="desc">A colorful spiral made from increasing steps and rotations.</div>
+  <div id="turtle-div"></div>
+
+  <script type="text/python">
+    from browser import document, window
+    from turtle import RawTurtle, ScrolledCanvas
+    import colorsys
+    import random
+
+    canvas = ScrolledCanvas(document["turtle-div"], width=600, height=600)
+    screen = canvas.getcanvas()
+    t = RawTurtle(canvas)
+    t.hideturtle()
+
+    def init():
+        t.clear()
+        t.reset()
+        t.hideturtle()
+        screen.bgcolor("black")
+        t.speed(int(document["speed"].value))
+        t.pensize(int(document["pen"].value))
+
+    def get_color(hue):
+        if document["randomColor"].checked:
+            return (random.random(), random.random(), random.random())
+        else:
+            return colorsys.hsv_to_rgb(hue, 1, 1)
+
+    def spiral():
+        init()
+        h = 0
+        for i in range(180):
+            t.color(get_color(h))
+            h += 0.005
+            t.forward(i)
+            t.right(59)
+            t.circle(i * 0.1, 45)
+
+    def flower():
+        init()
+        h = 0
+        for i in range(72):
+            for j in range(36):
+                t.color(get_color(h))
+                h += 0.002
+                t.circle(120 - j * 3, 90)
+                t.left(90)
+                t.circle(120 - j * 3, 90)
+            t.right(5)
+
+    def hexa():
+        init()
+        h = 0
+        for i in range(160):
+            t.color(get_color(h))
+            h += 0.005
+            for _ in range(6):
+                t.forward(i)
+                t.left(60)
+            t.left(59)
+
+    def infinity():
+        init()
+        h = 0
+        for i in range(150):
+            t.color(get_color(h))
+            h += 0.006
+            t.circle(100, 60)
+            t.left(120)
+            t.circle(100, 60)
+            t.left(125)
+
+    patterns = {
+        "spiral": spiral,
+        "flower": flower,
+        "hexa": hexa,
+        "infinity": infinity
+    }
+
+    def runPattern():
+        selected = document["patternSelect"].value
+        patterns[selected]()
+
+    document["runPattern"] = runPattern
+  </script>
+
+  <script>
+    const descriptions = {
+      spiral: "🌀 Spiral Vortex: A colorful spiral made from increasing steps and circular arcs.",
+      flower: "🌸 Flower Galaxy: Rotating petals that form a blooming galaxy of colors.",
+      hexa: "🔷 Hexa Flower: A hexagonal burst that evolves with spiraling symmetry.",
+      infinity: "♾️ Infinity Bloom: Repeating loops in an infinity-like bloom shape."
+    }
+
+    function runPattern() {
+      __BRYTHON__.builtins.runPattern()
+    }
+
+    function updateDescription() {
+      const selected = document.getElementById("patternSelect").value
+      document.getElementById("desc").innerText = descriptions[selected]
+    }
+
+    function saveCanvas() {
+      const canvas = document.querySelector("#turtle-div canvas");
+      const link = document.createElement("a");
+      link.download = "turtle_art.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+</body>
+</html
