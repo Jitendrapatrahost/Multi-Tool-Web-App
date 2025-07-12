@@ -150,17 +150,31 @@ body {
     </main>
   </div>
   <script>
-    function logout() {
-  alert("You have been logged out.");
-  localStorage.removeItem("rememberAdmin");
-  window.location.href = "admin-login.html";
-}
-
-// Optional: Simulate loading data dynamically
+    // 🔐 SESSION CHECK
 document.addEventListener("DOMContentLoaded", () => {
+  const loggedInUser = localStorage.getItem("rememberAdmin");
+
+  if (!loggedInUser) {
+    // Not logged in — redirect
+    alert("Please login first.");
+    window.location.href = "admin-login.html";
+    return;
+  }
+
+  // Optional: Personalize greeting
+  document.querySelector("header h1").textContent = `Welcome, ${loggedInUser} 👋`;
+
+  // Simulate tool count
   const toolCount = 32 + Math.floor(Math.random() * 5); // fake count
   document.getElementById("toolCount").textContent = toolCount;
 });
+
+// 🔴 Logout
+function logout() {
+  localStorage.removeItem("rememberAdmin");
+  alert("Logged out successfully.");
+  window.location.href = "admin-login.html";
+}
   </script>
 </body>
 </html>
