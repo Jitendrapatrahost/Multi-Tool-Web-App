@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - AllWebTools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+<!--   <link rel="stylesheet" href="style.css" /> -->
+  body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 40px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.login-form p {
+  text-align: center;
+  font-size: 0.9em;
+  margin-bottom: 25px;
+  color: #cfd8dc;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1em;
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.password-group .toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 38px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 0.85em;
+  color: #cfd8dc;
+}
+
+.options a {
+  color: #80d8ff;
+  text-decoration: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #00c6ff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #009ec3;
+}
+
+.google-btn {
+  background-color: #ffffff;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.or-divider {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 0.9em;
+  color: #90a4ae;
+}
+
+.note {
+  font-size: 0.8em;
+  text-align: center;
+  margin-top: 15px;
+  color: #b0bec5;
+}
+
+</head>
+<body>
+  <div class="login-container">
+    <form class="login-form" onsubmit="return handleLogin(event)">
+      <h2>Admin Login</h2>
+      <p>Welcome back to All Web Tools Admin</p>
+
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" required />
+      </div>
+
+      <div class="input-group password-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required />
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+
+      <div class="options">
+        <label><input type="checkbox" id="rememberMe"> Remember Me</label>
+        <a href="#">Forgot Password?</a>
+      </div>
+
+      <button type="submit">Login</button>
+
+      <div class="or-divider">OR</div>
+
+      <button class="google-btn" onclick="loginWithGoogle(event)">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+        Sign in with Google
+      </button>
+
+      <p class="note">Only authorized users can access the admin panel.</p>
+    </form>
+  </div>
+
+<!--   <script src="script.js"></script> -->
+  <script>
+    function togglePassword() {
+  const passInput = document.getElementById("password");
+  passInput.type = passInput.type === "Jitendra@123" ? "text" : "password";
+}
+
+function handleLogin(event) {
+  event.preventDefault(); // Prevent form submission
+
+  const username = document.getElementById("username").value;
+  const rememberMe = document.getElementById("rememberMe").checked;
+
+  // Temporary login check
+  if (username === "Jitendra") {
+    alert("Login successful!");
+    if (rememberMe) {
+      localStorage.setItem("rememberAdmin", username);
+    } else {
+      localStorage.removeItem("rememberAdmin");
+    }
+    // Redirect to admin dashboard (placeholder)
+    window.location.href = "admin-dashboard.html";
+  } else {
+    alert("Invalid credentials!");
+  }
+}
+
+function loginWithGoogle(event) {
+  event.preventDefault();
+  alert("Google Sign-In");
+}
+
+  </script>
+</body>
+</html>
