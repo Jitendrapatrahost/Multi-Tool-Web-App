@@ -6,7 +6,8 @@
   <title>Admin Login - AllWebTools</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
 <!--   <link rel="stylesheet" href="style.css" /> -->
-  body {
+  <style>
+    body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
@@ -133,7 +134,7 @@ button:hover {
   margin-top: 15px;
   color: #b0bec5;
 }
-
+  </style>
 </head>
 <body>
   <div class="login-container">
@@ -174,7 +175,7 @@ button:hover {
   <script>
     function togglePassword() {
   const passInput = document.getElementById("password");
-  passInput.type = passInput.type === "Jitendra@123" ? "text" : "password";
+  passInput.type = passInput.type === "password" ? "text" : "password";
 }
 
 function handleLogin(event) {
@@ -184,7 +185,7 @@ function handleLogin(event) {
   const rememberMe = document.getElementById("rememberMe").checked;
 
   // Temporary login check
-  if (username === "Jitendra") {
+  if (username === "admin") {
     alert("Login successful!");
     if (rememberMe) {
       localStorage.setItem("rememberAdmin", username);
@@ -200,9 +201,8 @@ function handleLogin(event) {
 
 function loginWithGoogle(event) {
   event.preventDefault();
-  alert("Google Sign-In");
+  alert("Google Sign-In is a placeholder. Integrate with Firebase or OAuth.");
 }
-
   </script>
 </body>
 </html>
