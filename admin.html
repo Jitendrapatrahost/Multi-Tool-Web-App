@@ -175,7 +175,7 @@ button:hover {
   <script>
     function togglePassword() {
   const passInput = document.getElementById("password");
-  passInput.type = passInput.type === "password" ? "text" : "password";
+  passInput.type = passInput.type === "Jitendra@123" ? "text" : "password";
 }
 
 function handleLogin(event) {
@@ -185,8 +185,8 @@ function handleLogin(event) {
   const rememberMe = document.getElementById("rememberMe").checked;
 
   // Temporary login check
-  if (username === "admin") {
-    alert("Login successful!");
+  if (username === "Jitendra") {
+    // alert("Login successful!");
     if (rememberMe) {
       localStorage.setItem("rememberAdmin", username);
     } else {
